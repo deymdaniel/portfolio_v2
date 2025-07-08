@@ -38,8 +38,7 @@ const Footer = () => {
               {config.name}
             </h3>
             <p className={`${config.colors.textSecondary} max-w-md`}>
-              {config.title} passionate about creating beautiful web
-              experiences.
+              {config.title}
             </p>
           </div>
 
