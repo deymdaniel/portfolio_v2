@@ -39,7 +39,7 @@ export const config = {
       title: "Portfolio Website",
       description:
         "Portfolio website showcasing my work as a frontend developer and web designer. It features a modern design, responsive layout, and highlights my skills and projects.",
-      image: "./src/assets/portfolio.png", // Replace with your project image
+      image: "/src/assets/portfolio.png", // Remove the dot at the beginning
       technologies: ["React", "Tailwind CSS", "JavaScript"],
       liveUrl: "https://portfolio-v2-deymdaniels-projects.vercel.app/",
       githubUrl: "https://github.com/deymdaniel/portfolio_v2",
