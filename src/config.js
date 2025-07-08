@@ -36,13 +36,13 @@ export const config = {
   projects: [
     {
       id: 1,
-      title: "Project One",
+      title: "Portfolio Website",
       description:
-        "A brief description of your first project. Explain what technologies you used and what problems it solves.",
-      image: "/api/placeholder/400/300", // Replace with your project image
+        "Portfolio website showcasing my work as a frontend developer and web designer. It features a modern design, responsive layout, and highlights my skills and projects.",
+      image: "./src/assets/portfolio.png", // Replace with your project image
       technologies: ["React", "Tailwind CSS", "JavaScript"],
-      liveUrl: "https://your-project-live-url.com",
-      githubUrl: "https://github.com/yourusername/project-one",
+      liveUrl: "https://portfolio-v2-deymdaniels-projects.vercel.app/",
+      githubUrl: "https://github.com/deymdaniel/portfolio_v2",
     },
     {
       id: 2,
