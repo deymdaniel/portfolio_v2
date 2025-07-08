@@ -39,7 +39,7 @@ export const config = {
       title: "Portfolio Website",
       description:
         "Portfolio website showcasing my work as a frontend developer and web designer. It features a modern design, responsive layout, and highlights my skills and projects.",
-      image: "/src/assets/portfolio.png", // Remove the dot at the beginning
+      image: "/assets/portfolio.png", // Changed from /src/assets/portfolio.png
       technologies: ["React", "Tailwind CSS", "JavaScript"],
       liveUrl: "https://portfolio-v2-deymdaniels-projects.vercel.app/",
       githubUrl: "https://github.com/deymdaniel/portfolio_v2",
@@ -49,7 +49,7 @@ export const config = {
       title: "Project Two",
       description:
         "Description of your second project. Highlight the key features and your role in developing it.",
-      image: "/api/placeholder/400/300", // Replace with your project image
+      image: "/api/placeholder/400/300",
       technologies: ["HTML", "CSS", "JavaScript"],
       liveUrl: "https://your-project-live-url.com",
       githubUrl: "https://github.com/yourusername/project-two",
@@ -59,7 +59,7 @@ export const config = {
       title: "Project Three",
       description:
         "Your third project description. Mention any challenges you overcame and what you learned.",
-      image: "/api/placeholder/400/300", // Replace with your project image
+      image: "/api/placeholder/400/300",
       technologies: ["React", "API Integration", "Responsive Design"],
       liveUrl: "https://your-project-live-url.com",
       githubUrl: "https://github.com/yourusername/project-three",
