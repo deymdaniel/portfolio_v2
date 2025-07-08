@@ -17,14 +17,46 @@ const About = () => {
           ></div>
         </div>
 
-        <div className='max-w-4xl'>
+        <div className='max-w-4xl space-y-6'>
           <p
-            className={`${config.colors.textSecondary} text-lg leading-relaxed mb-8`}
+            className={`${config.colors.textSecondary} text-lg leading-relaxed`}
           >
             {config.about.description}
           </p>
 
-          <div>
+          <p
+            className={`${config.colors.textSecondary} text-lg leading-relaxed`}
+          >
+            Before diving into web development, I explored graphic design as a
+            hobby, which now helps me blend creativity with code to build
+            visually appealing and user-friendly websites.
+          </p>
+
+          <p
+            className={`${config.colors.textSecondary} text-lg leading-relaxed`}
+          >
+            When I'm not coding, you'll probably find me gaming, watching{" "}
+            <a
+              href='https://boxd.it/6fW5D'
+              target='_blank'
+              rel='noopener noreferrer'
+              className={`${config.colors.accent} ${config.colors.linkHover} transition-colors duration-200 underline`}
+            >
+              movies
+            </a>
+            , or listening to{" "}
+            <a
+              href='https://open.spotify.com/user/deymdaniel?si=2acf08424f9c4e34'
+              target='_blank'
+              rel='noopener noreferrer'
+              className={`${config.colors.accent} ${config.colors.linkHover} transition-colors duration-200 underline`}
+            >
+              music
+            </a>
+            .
+          </p>
+
+          <div className='mt-8'>
             <h3
               className={`${config.colors.textPrimary} text-xl font-semibold mb-6`}
             >
