@@ -128,6 +128,30 @@ const Projects = () => {
                     </span>
                   ))}
                 </div>
+
+                {/* Mobile-only buttons */}
+                <div className='mt-6 flex items-center space-x-4 md:hidden'>
+                  {project.status !== "Coming Soon" && (
+                    <>
+                      <a
+                        href={project.liveUrl}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className={`${config.colors.buttonSecondary} border px-4 py-2 rounded text-xs transition-all duration-200 inline-flex items-center`}
+                      >
+                        Live Demo
+                      </a>
+                      <a
+                        href={project.githubUrl}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className={`${config.colors.buttonSecondary} border px-4 py-2 rounded text-xs transition-all duration-200 inline-flex items-center`}
+                      >
+                        GitHub
+                      </a>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           ))}
