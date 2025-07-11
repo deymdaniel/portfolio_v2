@@ -56,14 +56,13 @@ export const config = {
     },
     {
       id: 3,
-      title: "Upcoming E-Commerce Website Prototype",
+      title: "Salon Landing Page Prototype",
       description:
-        "Currently developing an e-commerce website prototype with a modern design and seamless user experience.",
-      image: "/api/placeholder/400/300",
+        "A prototype for a salon landing page featuring a modern design and user-friendly interface.",
+      image: "/assets/salon.png",
       technologies: ["React", "Tailwind CSS", "Responsive Design"],
-      liveUrl: "#",
-      githubUrl: "#",
-      status: "Coming Soon",
+      liveUrl: "https://salon-website-prototype.vercel.app/",
+      githubUrl: "https://github.com/deymdaniel/salon_website_prototype",
     },
   ],
 
