@@ -62,11 +62,6 @@ const Hero = () => {
           >
             {config.name}
           </h1>
-          <h2
-            className={`${config.colors.textSecondary} text-3xl md:text-5xl lg:text-6xl font-bold leading-tight`}
-          >
-            I build websites for businesses.
-          </h2>
           <p
             className={`${config.colors.textSecondary} text-lg md:text-xl max-w-lg leading-relaxed`}
           >
