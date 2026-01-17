@@ -21,6 +21,7 @@ export const config = {
       "Tailwind CSS",
       "Git",
       "MySQL",
+      "Firebase",
     ],
   },
 
@@ -36,23 +37,23 @@ export const config = {
   projects: [
     {
       id: 1,
-      title: "Portfolio Website",
+      title: "Ecommerce Website",
       description:
-        "Portfolio website showcasing my work as a frontend developer and web designer. It features a modern design, responsive layout, and highlights my skills and projects.",
-      image: "/assets/portfolio.png", // Changed from /src/assets/portfolio.png
+        "A website for an ecommerce store that sells jewelry. I handled the frontend development using React and Tailwind CSS.",
+      image: "/assets/amrah.png", // Changed from /src/assets/portfolio.png
       technologies: ["React", "Tailwind CSS", "JavaScript"],
-      liveUrl: "https://portfolio-v2-deymdaniels-projects.vercel.app/",
-      githubUrl: "https://github.com/deymdaniel/portfolio_v2",
+      liveUrl: "https://amrah-jewelry.vercel.app/",
+      githubUrl: "https://github.com/deymdaniel/amrah-jewelry",
     },
     {
       id: 2,
-      title: "School Website Prototype",
+      title: "Subscription Manager",
       description:
-        "One of my first web projects only using HTML, CSS, and JavaScript. Now updated with a modern design and user-friendly interface.",
-      image: "/assets/mapua.png",
-      technologies: ["HTML", "CSS", "JavaScript"],
-      liveUrl: "https://deymdaniel.github.io/Mapua-Project-Website/",
-      githubUrl: "https://github.com/deymdaniel/Mapua-Project-Website",
+        "A web application that helps users manage their subscriptions and track expenses. Uses Firebase for backend services.",
+      image: "/assets/subtrack.png",
+      technologies: ["React", "Tailwind CSS", "JavaScript", "Firebase"],
+      liveUrl: "https://subscription-manager-web-app.vercel.app/",
+      githubUrl: "https://github.com/deymdaniel/subscription-manager-web-app",
     },
     {
       id: 3,

@@ -21,7 +21,7 @@ const Contact = () => {
       // Create mailto link with form data
       const subject = encodeURIComponent(`Portfolio Contact: ${data.subject}`);
       const body = encodeURIComponent(
-        `Name: ${data.name}\nEmail: ${data.email}\n\nMessage:\n${data.message}`
+        `Name: ${data.name}\nEmail: ${data.email}\n\nMessage:\n${data.message}`,
       );
       const mailtoUrl = `mailto:${config.email}?subject=${subject}&body=${body}`;
 
@@ -50,9 +50,8 @@ const Contact = () => {
           <p
             className={`${config.colors.textSecondary} text-lg max-w-2xl mx-auto leading-relaxed`}
           >
-            I'm open to new opportunities and ready to help bring your digital
-            vision to life. Whether you're looking to hire a developer or need a
-            website for your business, let's discuss how we can work together!
+            If you're looking to hire a developer or need a website for your
+            business, let's discuss how we can work together!
           </p>
         </div>
 
