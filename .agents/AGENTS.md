@@ -58,6 +58,10 @@ All core textual and project media content has been migrated from the static con
 * Deploy studio dashboard to the cloud: `cd studio && npx sanity deploy`
 * **Schema Updates Rule**: If an agent makes any changes to the schemas in `studio/schemaTypes/`, they must instruct the user to run `cd studio && npx sanity deploy` to sync the hosted cloud dashboard with the new schemas.
 
+### CI/CD Workflows (`.github/workflows/`)
+* **verify.yml**: Runs `npm run lint` and `npm run build` on all pushes and PRs to `main` to verify code quality.
+* **deploy-studio.yml**: Automatically builds and deploys Sanity Studio when files inside `studio/` are modified and pushed to `main`. Requires `SANITY_AUTH_TOKEN` secret to be set up in the GitHub Repository Secrets.
+
 ---
 
 ## 4. Optimization & Tooling (Graphify)
