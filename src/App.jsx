@@ -21,7 +21,7 @@ function App() {
     const fetchData = async () => {
       try {
         const [personalInfo, about, social, projects] = await Promise.all([
-          client.fetch(`*[_type == "personalInfo"][0]`),
+          client.fetch(`*[_type == "personalInfo"][0] { ..., "resumeUrl": resume.asset->url }`),
           client.fetch(`*[_type == "about"][0]`),
           client.fetch(`*[_type == "social"][0]`),
           client.fetch(`*[_type == "project"] | order(order asc)`),

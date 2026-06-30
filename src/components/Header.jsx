@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { config } from "../config";
 
-const Header = () => {
+const Header = ({ personalInfo }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
@@ -79,7 +79,7 @@ const Header = () => {
           </div>
 
           <a
-            href='/resume.pdf' // Add your resume file to public folder
+            href={personalInfo?.resumeUrl || '/resume.pdf'}
             target='_blank'
             rel='noopener noreferrer'
             className={`border ${config.colors.buttonSecondary} px-4 py-2 rounded transition-all duration-200 font-medium`}

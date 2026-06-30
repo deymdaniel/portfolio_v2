@@ -23,5 +23,13 @@ export default {
       type: 'string',
       title: 'Location',
     },
+    {
+      name: 'resume',
+      type: 'file',
+      title: 'Resume PDF',
+      options: {
+        accept: '.pdf',
+      },
+    },
   ],
 }
