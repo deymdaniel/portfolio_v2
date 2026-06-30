@@ -171,7 +171,7 @@ const Projects = ({ projects }) => {
                       index % 2 === 0 ? "md:justify-end" : "md:justify-start"
                     } mb-6`}
                   >
-                    {project.technologies.map((tech, techIndex) => (
+                    {(project.technologies || []).map((tech, techIndex) => (
                       <span
                         key={techIndex}
                         className={`${config.colors.textSecondary} text-sm`}

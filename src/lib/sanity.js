@@ -1,5 +1,5 @@
 import { createClient } from '@sanity/client'
-import imageUrlBuilder from '@sanity/image-url'
+import { createImageUrlBuilder } from '@sanity/image-url'
 
 export const client = createClient({
   projectId: 'k9sjfd4b',
@@ -8,7 +8,7 @@ export const client = createClient({
   useCdn: true, // Use CDN for fast response times and cached API responses
 })
 
-const builder = imageUrlBuilder(client)
+const builder = createImageUrlBuilder(client)
 
 export function urlFor(source) {
   if (!source) return ''
