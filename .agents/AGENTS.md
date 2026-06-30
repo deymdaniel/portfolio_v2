@@ -56,3 +56,10 @@ All core textual and project media content has been migrated from the static con
 ### Sanity Studio
 * Run studio locally: `cd studio && npm run dev`
 * Deploy studio dashboard to the cloud: `cd studio && npx sanity deploy`
+
+---
+
+## 4. Optimization & Tooling (Graphify)
+
+* **Knowledge Graph**: A pre-built knowledge graph of the codebase exists in `graphify-out/graph.json`.
+* **Rule**: When answering questions about the repository structure, components, or files, agents should check if `graphify-out/graph.json` exists and use the `graphify query` CLI or the `graphify` MCP server tools to extract target context instead of reading files one-by-one. This reduces context clutter and saves up to 9.2x on token consumption.
