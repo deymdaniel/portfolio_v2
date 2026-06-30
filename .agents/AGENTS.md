@@ -13,7 +13,7 @@ All core textual and project media content has been migrated from the static con
 * **API Client**: Located at [src/lib/sanity.js](file:///Users/danielbiacan/Desktop/portfolio_v2/src/lib/sanity.js). Exports the `client` instance and `urlFor(source)` image URL helper.
 
 ### Schema Structure (`studio/schemaTypes/`)
-* `personalInfo`: Name, Title, Email, Location.
+* `personalInfo`: Name, Title, Email, Location, Resume PDF (file asset).
 * `about`: Main description text, skills array.
 * `social`: Social link URLs (GitHub, LinkedIn, Instagram, Facebook).
 * `project`: Showcase projects containing title, description, screenshot image, tech tags, liveUrl, githubUrl, an optional `videoUrl` for walkthroughs, and `order` number for sorting.
