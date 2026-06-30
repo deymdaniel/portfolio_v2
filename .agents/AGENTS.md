@@ -56,6 +56,7 @@ All core textual and project media content has been migrated from the static con
 ### Sanity Studio
 * Run studio locally: `cd studio && npm run dev`
 * Deploy studio dashboard to the cloud: `cd studio && npx sanity deploy`
+* **Schema Updates Rule**: If an agent makes any changes to the schemas in `studio/schemaTypes/`, they must instruct the user to run `cd studio && npx sanity deploy` to sync the hosted cloud dashboard with the new schemas.
 
 ---
 
