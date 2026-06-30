@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { config } from "../config";
 
-const Contact = () => {
+const Contact = ({ personalInfo }) => {
+  const emailAddress = personalInfo?.email || config.email;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
@@ -23,14 +24,14 @@ const Contact = () => {
       const body = encodeURIComponent(
         `Name: ${data.name}\nEmail: ${data.email}\n\nMessage:\n${data.message}`,
       );
-      const mailtoUrl = `mailto:${config.email}?subject=${subject}&body=${body}`;
+      const mailtoUrl = `mailto:${emailAddress}?subject=${subject}&body=${body}`;
 
       // Open email client
       window.location.href = mailtoUrl;
 
       setSubmitStatus("success");
       reset();
-    } catch (error) {
+    } catch {
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -147,10 +148,10 @@ const Contact = () => {
               Or reach out directly:
             </p>
             <a
-              href={`mailto:${config.email}`}
+              href={`mailto:${emailAddress}`}
               className={`${config.colors.accent} ${config.colors.linkHover} text-lg transition-colors duration-200`}
             >
-              {config.email}
+              {emailAddress}
             </a>
           </div>
         </div>

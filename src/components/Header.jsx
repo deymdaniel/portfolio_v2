@@ -63,7 +63,7 @@ const Header = () => {
               { name: "About", id: "about" },
               { name: "Projects", id: "projects" },
               { name: "Contact", id: "contact" },
-            ].map((item, index) => (
+            ].map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}

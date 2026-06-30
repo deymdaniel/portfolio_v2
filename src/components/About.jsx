@@ -1,7 +1,10 @@
 import React from "react";
 import { config } from "../config";
 
-const About = () => {
+const About = ({ about }) => {
+  const description = about?.description || config.about.description;
+  const skills = about?.skills || config.about.skills;
+
   return (
     <section id='about' className={`py-20 ${config.colors.primary} px-6`}>
       <div className='max-w-6xl mx-auto'>
@@ -21,7 +24,7 @@ const About = () => {
           <p
             className={`${config.colors.textSecondary} text-lg leading-relaxed`}
           >
-            {config.about.description}
+            {description}
           </p>
 
           <p
@@ -63,7 +66,7 @@ const About = () => {
               Technologies I work with:
             </h3>
             <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
-              {config.about.skills.map((skill, index) => (
+              {skills.map((skill, index) => (
                 <div
                   key={index}
                   className={`flex items-center ${config.colors.textSecondary}`}

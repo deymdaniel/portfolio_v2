@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 CUSTOMIZATION.md
+
+# Graphify output
+graphify-out/
+
