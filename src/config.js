@@ -18,7 +18,7 @@ export const config = {
       "Firebase & Supabase",
       "Git & GitHub Actions (CI/CD)",
       "MySQL & SQLite",
-      "Model Context Protocol (MCP)",
+      "Agentic AI & MCP Workflows",
       "APIs & Cloud Integrations",
     ],
   },
