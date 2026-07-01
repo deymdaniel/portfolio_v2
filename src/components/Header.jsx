@@ -59,17 +59,21 @@ const Header = ({ personalInfo, social, isDarkMode, toggleTheme }) => {
     >
       <nav className="h-full lg:p-2 p-4 flex lg:flex-col justify-between items-center lg:items-start">
         {/* Top block */}
-        <div className="">
+        <div className="w-full">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "auto" })}
-            className="cursor-pointer text-left block"
+            className="cursor-pointer text-left w-full lg:w-auto block"
           >
-            <span className="font-display text-base font-bold tracking-tight uppercase leading-tight">
-              {config.name.split(' ').slice(0, -1).join(' ')}
-            </span>
-            <span className="hidden lg:block font-display text-base font-bold tracking-tight uppercase leading-tight">
-              {config.name.split(' ').slice(-1)[0]}
-            </span>
+            {/* Desktop split name: DANIEL on line 1, BIACAN III on line 2 */}
+            <div className="hidden lg:block font-display text-base font-bold tracking-tight uppercase leading-tight">
+              <div>Daniel</div>
+              <div>Biacan&nbsp;III</div>
+            </div>
+
+            {/* Mobile full name on one line */}
+            <div className="lg:hidden font-display text-base font-bold tracking-tight uppercase leading-tight whitespace-nowrap">
+              Daniel Biacan&nbsp;III
+            </div>
           </button>
 
           {/* Desktop Nav */}

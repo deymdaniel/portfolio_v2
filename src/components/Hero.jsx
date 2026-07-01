@@ -23,13 +23,12 @@ const Hero = () => {
       </div>
 
       <div>
-        {/* Massive name */}
-        <h1 className="font-display text-[6rem] sm:text-[6rem] lg:text-[10rem] xl:text-[12rem] font-bold tracking-tighter uppercase leading-[0.85] text-ink select-none">
-          {name}
+        <h1 className="font-display text-[6rem] sm:text-[6rem] lg:text-[8rem] xl:text-[8rem] font-semibold tracking-tighter uppercase leading-[0.85] text-ink select-none">
+          {name.replace("Biacan III", "Biacan\u00a0III")}
         </h1>
 
         {/* Tiny role — extreme contrast */}
-        <h2 className="font-sans text-xs tracking-[0.3em] uppercase font-normal text-muted mt-4">
+        <h2 className="font-sans text-sm sm:text-base tracking-[0.2em] uppercase font-bold text-ink mt-6">
           {title}
         </h2>
 
@@ -40,7 +39,7 @@ const Hero = () => {
         {/* CTA */}
         <button
           onClick={() => scrollToSection('projects')}
-          className="mt-12 mb-4 font-sans text-xs tracking-widest uppercase font-bold text-ink underline underline-offset-4 hover:no-underline cursor-pointer text-left"
+          className="mt-8 mb-4 font-sans text-xs tracking-widest uppercase font-bold text-ink underline underline-offset-4 hover:no-underline cursor-pointer text-left"
         >
           VIEW PROJECTS →
         </button>
