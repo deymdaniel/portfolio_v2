@@ -4,7 +4,7 @@
 export const config = {
   // Personal Information
   name: "Daniel Biacan III",
-  title: "Frontend Developer & Web Designer",
+  title: "Full Stack Web & App developer",
   email: "danielbiacaniii@gmail.com",
   location: "Manila, Philippines",
 
@@ -12,13 +12,14 @@ export const config = {
   about: {
     description: `I'm a web developer and designer based in Manila, Philippines, currently pursuing a BS Computer Science degree at CIIT College of Arts and Technology. I specialize in creating modern, responsive websites for businesses and have experience in both frontend and backend development.`,
     skills: [
-      "JavaScript",
-      "React",
-      "HTML & CSS",
-      "Tailwind CSS",
-      "Git",
-      "MySQL",
-      "Firebase",
+      "React 19 & TypeScript",
+      "Tailwind CSS & CSS3",
+      "Flutter & Dart",
+      "Firebase & Supabase",
+      "Git & GitHub Actions (CI/CD)",
+      "MySQL & SQLite",
+      "Model Context Protocol (MCP)",
+      "APIs & Cloud Integrations",
     ],
   },
 
