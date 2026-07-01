@@ -33,11 +33,8 @@ const Hero = () => {
           {title}
         </h2>
 
-        {/* Description */}
         <p className="font-sans text-[11px] tracking-wide leading-relaxed uppercase text-muted max-w-md mt-8">
-          A frontend developer and web designer specializing in creating
-          modern, responsive websites that help local businesses establish
-          their online presence and grow their digital footprint.
+          Full-stack web and mobile developer with experience building responsive web platforms and cross-platform mobile apps using React, Flutter, Supabase, and Firebase. I use modern developer tools like AI agents and Model Context Protocol (MCP) servers as force multipliers to speed up coding, debugging, and testing, allowing me to build and ship high-quality software quickly.
         </p>
 
         {/* CTA */}
