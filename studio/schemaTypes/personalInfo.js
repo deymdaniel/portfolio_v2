@@ -4,16 +4,6 @@ export default {
   title: 'Personal Info',
   fields: [
     {
-      name: 'name',
-      type: 'string',
-      title: 'Name',
-    },
-    {
-      name: 'title',
-      type: 'string',
-      title: 'Title',
-    },
-    {
       name: 'email',
       type: 'string',
       title: 'Email',

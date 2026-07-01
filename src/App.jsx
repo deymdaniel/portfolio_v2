@@ -17,6 +17,14 @@ function App() {
     loading: true,
   });
 
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved) {
+      return saved === "dark";
+    }
+    return false; // Default to light mode
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,24 +51,44 @@ function App() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (isDarkMode) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => setIsDarkMode((prev) => !prev);
+
   if (data.loading) {
     return (
-      <div className="min-h-screen bg-stone-800 flex items-center justify-center text-slate-200">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      <div className="min-h-screen bg-ground flex items-center justify-center text-ink font-display tracking-tighter text-4xl font-bold select-none">
+        ...
       </div>
     );
   }
 
   return (
-    <div className='min-h-screen bg-stone-800'>
-      <Header personalInfo={data.personalInfo} />
-      <main>
-        <Hero personalInfo={data.personalInfo} social={data.social} />
-        <About about={data.about} />
-        <Projects projects={data.projects} />
-        <Contact personalInfo={data.personalInfo} />
-      </main>
-      <Footer personalInfo={data.personalInfo} social={data.social} />
+    <div className="min-h-screen bg-ground text-ink selection:bg-ink selection:text-ground transition-colors duration-150 lg:grid lg:grid-cols-12">
+      <Header
+        personalInfo={data.personalInfo}
+        social={data.social}
+        isDarkMode={isDarkMode}
+        toggleTheme={toggleTheme}
+      />
+      <div className="lg:col-span-10 lg:col-start-3 flex flex-col min-w-0">
+        <main className="flex-1">
+          <Hero />
+          <About about={data.about} />
+          <Projects projects={data.projects} />
+          <Contact personalInfo={data.personalInfo} />
+        </main>
+        <Footer personalInfo={data.personalInfo} social={data.social} />
+      </div>
     </div>
   );
 }

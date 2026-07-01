@@ -4,11 +4,6 @@ export default {
   title: 'About Me',
   fields: [
     {
-      name: 'description',
-      type: 'text',
-      title: 'Description',
-    },
-    {
       name: 'skills',
       type: 'array',
       title: 'Skills',

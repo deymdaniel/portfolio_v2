@@ -10,10 +10,7 @@ export const config = {
 
   // About section
   about: {
-    description: `I'm a web developer and designer based in Manila, Philippines, currently
-        pursuing a BS Computer Science degree at CIIT College of Arts and Technology. 
-        I specialize in creating modern, responsive websites for businesses and have 
-        experience in both frontend and backend development.`,
+    description: `I'm a web developer and designer based in Manila, Philippines, currently pursuing a BS Computer Science degree at CIIT College of Arts and Technology. I specialize in creating modern, responsive websites for businesses and have experience in both frontend and backend development.`,
     skills: [
       "JavaScript",
       "React",
@@ -70,23 +67,23 @@ export const config = {
   // Color scheme - easily customizable
   colors: {
     // Primary colors
-    primary: "bg-stone-800", // Main background
-    secondary: "bg-stone-700", // Secondary background
-    accent: "text-red-500", // Accent color for highlights
+    primary: "bg-ground text-ink", // Main background
+    secondary: "bg-surface", // Secondary background
+    accent: "text-ink", // Accent color for highlights
 
     // Text colors
-    textPrimary: "text-slate-200", // Main text color
-    textSecondary: "text-slate-400", // Secondary text color
-    textMuted: "text-slate-500", // Muted text color
+    textPrimary: "text-ink", // Main text color
+    textSecondary: "text-muted", // Secondary text color
+    textMuted: "text-muted", // Muted text color
 
     // Interactive elements
-    linkHover: "hover:text-red-500",
-    buttonPrimary: "bg-red-600 hover:bg-red-700",
+    linkHover: "hover:underline",
+    buttonPrimary: "bg-ink text-ground hover:bg-muted transition-colors duration-200",
     buttonSecondary:
-      "border-red-300 text-red-300 hover:bg-red-300 hover:text-slate-900",
+      "border border-border-custom text-ink hover:bg-ink hover:text-ground transition-all duration-200",
 
     // Borders and dividers
-    border: "border-slate-700",
-    borderLight: "border-slate-600",
+    border: "border-border-custom",
+    borderLight: "border-border-light",
   },
 };
