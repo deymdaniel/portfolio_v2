@@ -22,10 +22,10 @@ export default {
       },
     },
     {
-      name: 'images',
+      name: 'landscapeImages',
       type: 'array',
-      title: 'Project Gallery (Optional)',
-      description: 'Additional screenshots to showcase this project',
+      title: 'Landscape / Web Screenshots (Optional)',
+      description: 'Screenshots of the desktop/website layout',
       of: [
         {
           type: 'image',
@@ -36,17 +36,18 @@ export default {
       ],
     },
     {
-      name: 'layout',
-      type: 'string',
-      title: 'Project Layout / Orientation',
-      description: 'Choose landscape for websites, or portrait for mobile app screenshots/mockups',
-      options: {
-        list: [
-          { title: 'Landscape / Web (16:9)', value: 'landscape' },
-          { title: 'Portrait / Mobile (9:16)', value: 'portrait' },
-        ],
-      },
-      initialValue: 'landscape',
+      name: 'portraitImages',
+      type: 'array',
+      title: 'Portrait / Mobile Screenshots (Optional)',
+      description: 'Screenshots or mockups of the mobile layout',
+      of: [
+        {
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+        },
+      ],
     },
     {
       name: 'technologies',

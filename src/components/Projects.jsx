@@ -25,34 +25,46 @@ const getYouTubeEmbedUrl = (url) => {
 const ProjectItem = ({ project, index }) => {
   const hasVideo = !!project.videoUrl;
 
-  // Build the media list containing ONLY image screenshots (no video in carousel)
-  const mediaList = [];
-
+  // Build list of landscape screenshots (web)
+  const landscapeList = [];
   if (project.image) {
-    mediaList.push({
-      type: "image",
+    landscapeList.push({
       asset: project.image,
-      alt: `${project.title} Cover`,
+      alt: `${project.title} Desktop Cover`,
     });
   }
-
-  if (project.images && project.images.length > 0) {
-    project.images.forEach((img, idx) => {
-      mediaList.push({
-        type: "image",
+  if (project.landscapeImages && project.landscapeImages.length > 0) {
+    project.landscapeImages.forEach((img, idx) => {
+      landscapeList.push({
         asset: img,
-        alt: `${project.title} Screenshot ${idx + 1}`,
+        alt: `${project.title} Desktop Screenshot ${idx + 1}`,
       });
     });
   }
 
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [showVideo, setShowVideo] = useState(false);
-  const currentMedia = mediaList[activeIndex];
+  // Build list of portrait screenshots (mobile mockups)
+  const portraitList = [];
+  if (project.portraitImages && project.portraitImages.length > 0) {
+    project.portraitImages.forEach((img, idx) => {
+      portraitList.push({
+        asset: img,
+        alt: `${project.title} Mobile Mockup ${idx + 1}`,
+      });
+    });
+  }
 
-  const handleNextMedia = () => {
-    if (mediaList.length <= 1) return;
-    setActiveIndex((prev) => (prev + 1) % mediaList.length);
+  const [activeLandscapeIdx, setActiveLandscapeIdx] = useState(0);
+  const [activePortraitIdx, setActivePortraitIdx] = useState(0);
+  const [showVideoModal, setShowVideoModal] = useState(false);
+
+  const handleNextLandscape = () => {
+    if (landscapeList.length <= 1) return;
+    setActiveLandscapeIdx((prev) => (prev + 1) % landscapeList.length);
+  };
+
+  const handleNextPortrait = () => {
+    if (portraitList.length <= 1) return;
+    setActivePortraitIdx((prev) => (prev + 1) % portraitList.length);
   };
 
   const getMediaUrl = (asset) => {
@@ -60,69 +72,94 @@ const ProjectItem = ({ project, index }) => {
     return typeof asset === "object" ? urlFor(asset).width(800).url() : asset;
   };
 
+  const showSplit = landscapeList.length > 0 && portraitList.length > 0;
+
   return (
     <div className="py-16 lg:py-20 grid lg:grid-cols-10 gap-8 lg:gap-12 items-start">
-      {/* Project Media Viewport Slot — Constant height, no cropping */}
+      {/* Project Media Viewport Slot */}
       <div className="lg:col-span-6">
-        <div className="w-full bg-surface flex items-center justify-center lg:justify-start overflow-hidden select-none h-[280px] sm:h-[340px] lg:h-[380px]">
-          {project.status === "Coming Soon" ? (
-            <div className="w-full h-full flex items-center justify-center font-sans text-xs tracking-[0.2em] uppercase font-bold text-muted">
-              COMING SOON
-            </div>
-          ) : showVideo && hasVideo ? (
-            <div className="w-full h-full">
-              <iframe
-                src={getYouTubeEmbedUrl(project.videoUrl)}
-                className="w-full h-full border-0"
-                title={`${project.title} Walkthrough`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              ></iframe>
-            </div>
-          ) : (
-            <img
-              src={getMediaUrl(currentMedia?.asset)}
-              alt={currentMedia?.alt || project.title}
-              onClick={handleNextMedia}
-              className={`h-full w-auto object-contain ${mediaList.length > 1 ? "cursor-pointer" : ""}`}
-            />
-          )}
-        </div>
-
-        {/* Media Controls Toolbar below the image */}
-        {project.status !== "Coming Soon" && (
-          <div className="flex justify-between items-center mt-3 font-sans text-[10px] tracking-widest uppercase font-bold">
-            {/* Left side: State indicator */}
-            <span className="text-muted text-[9px]">
-              {showVideo ? (
-                "VIDEO WALKTHROUGH"
-              ) : mediaList.length > 1 ? (
-                `${activeIndex + 1} / ${mediaList.length}`
-              ) : (
-                "SCREENSHOT"
-              )}
-            </span>
-
-            {/* Right side: Navigation buttons */}
-            <div className="flex gap-4">
-              {showVideo ? (
-                <button
-                  onClick={() => setShowVideo(false)}
-                  className="cursor-pointer underline underline-offset-4 hover:no-underline text-ink"
-                >
-                  SHOW SCREENSHOTS
-                </button>
-              ) : (
-                mediaList.length > 1 && (
-                  <button
-                    onClick={handleNextMedia}
-                    className="cursor-pointer underline underline-offset-4 hover:no-underline text-ink"
-                  >
-                    NEXT IMAGE →
-                  </button>
-                )
+        {project.status === "Coming Soon" ? (
+          <div className="w-full bg-surface overflow-hidden select-none h-[280px] sm:h-[340px] lg:h-[380px] flex items-center justify-center font-sans text-xs tracking-[0.2em] uppercase font-bold text-muted">
+            COMING SOON
+          </div>
+        ) : showSplit ? (
+          /* Split media view: Web (Landscape) on left, Mobile (Portrait) on right */
+          <div className="flex flex-col sm:flex-row gap-6 items-stretch w-full">
+            {/* Left: Landscape Website */}
+            <div className="flex-1 flex flex-col justify-between">
+              <div className="w-full bg-surface flex items-center justify-center overflow-hidden h-[180px] sm:h-[220px] lg:h-[260px]">
+                <img
+                  src={getMediaUrl(landscapeList[activeLandscapeIdx]?.asset)}
+                  alt={landscapeList[activeLandscapeIdx]?.alt}
+                  onClick={handleNextLandscape}
+                  className={`h-full w-auto object-contain ${landscapeList.length > 1 ? "cursor-pointer" : ""}`}
+                />
+              </div>
+              
+              {landscapeList.length > 1 && (
+                <div className="flex justify-between items-center mt-2 font-sans text-[9px] tracking-widest uppercase font-bold select-none">
+                  <span className="text-muted">{activeLandscapeIdx + 1} / {landscapeList.length}</span>
+                  <button onClick={handleNextLandscape} className="cursor-pointer text-ink hover:underline">NEXT WEB →</button>
+                </div>
               )}
             </div>
+
+            {/* Right: Portrait Phone Mockup */}
+            <div className="w-full sm:w-[38%] flex flex-col justify-between">
+              <div className="w-full bg-surface flex items-center justify-center overflow-hidden h-[180px] sm:h-[220px] lg:h-[260px]">
+                <img
+                  src={getMediaUrl(portraitList[activePortraitIdx]?.asset)}
+                  alt={portraitList[activePortraitIdx]?.alt}
+                  onClick={handleNextPortrait}
+                  className={`h-full w-auto object-contain ${portraitList.length > 1 ? "cursor-pointer" : ""}`}
+                />
+              </div>
+
+              {portraitList.length > 1 && (
+                <div className="flex justify-between items-center mt-2 font-sans text-[9px] tracking-widest uppercase font-bold select-none">
+                  <span className="text-muted">{activePortraitIdx + 1} / {portraitList.length}</span>
+                  <button onClick={handleNextPortrait} className="cursor-pointer text-ink hover:underline">NEXT MOBILE →</button>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : landscapeList.length > 0 ? (
+          /* Landscape screenshot only */
+          <div className="w-full flex flex-col">
+            <div className="w-full bg-surface flex items-center justify-center lg:justify-start overflow-hidden select-none h-[280px] sm:h-[340px] lg:h-[380px]">
+              <img
+                src={getMediaUrl(landscapeList[activeLandscapeIdx]?.asset)}
+                alt={landscapeList[activeLandscapeIdx]?.alt}
+                onClick={handleNextLandscape}
+                className={`h-full w-auto object-contain ${landscapeList.length > 1 ? "cursor-pointer" : ""}`}
+              />
+            </div>
+            
+            {landscapeList.length > 1 && (
+              <div className="flex justify-between items-center mt-3 font-sans text-[9px] tracking-widest uppercase font-bold select-none">
+                <span className="text-muted">{activeLandscapeIdx + 1} / {landscapeList.length}</span>
+                <button onClick={handleNextLandscape} className="cursor-pointer text-ink hover:underline">NEXT IMAGE →</button>
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Portrait mockup only */
+          <div className="flex flex-col max-w-[320px] w-full">
+            <div className="w-full bg-surface flex items-center justify-center overflow-hidden select-none h-[400px] lg:h-[480px]">
+              <img
+                src={getMediaUrl(portraitList[activePortraitIdx]?.asset)}
+                alt={portraitList[activePortraitIdx]?.alt}
+                onClick={handleNextPortrait}
+                className={`h-full w-auto object-contain ${portraitList.length > 1 ? "cursor-pointer" : ""}`}
+              />
+            </div>
+
+            {portraitList.length > 1 && (
+              <div className="flex justify-between items-center mt-3 font-sans text-[9px] tracking-widest uppercase font-bold select-none">
+                <span className="text-muted">{activePortraitIdx + 1} / {portraitList.length}</span>
+                <button onClick={handleNextPortrait} className="cursor-pointer text-ink hover:underline">NEXT IMAGE →</button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -173,19 +210,49 @@ const ProjectItem = ({ project, index }) => {
                 </a>
               )}
 
-              {/* Toggles video walkthrough display in the main viewport */}
+              {/* Opens video walkthrough in modal */}
               {hasVideo && (
                 <button
-                  onClick={() => setShowVideo(!showVideo)}
+                  onClick={() => setShowVideoModal(true)}
                   className="underline underline-offset-4 hover:no-underline text-ink cursor-pointer"
                 >
-                  {showVideo ? "VIEW IMAGES" : "VIDEO DEMO"}
+                  VIDEO DEMO
                 </button>
               )}
             </>
           )}
         </div>
       </div>
+
+      {/* Video Modal Overlay */}
+      {showVideoModal && hasVideo && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ground/95 p-4 transition-colors duration-150">
+          <div className="relative w-full max-w-4xl bg-ground border border-border-custom flex flex-col">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center px-4 py-3 border-b border-border-light font-sans text-[10px] tracking-widest uppercase font-bold text-ink">
+              <span>PROJECT DEMO — {project.title}</span>
+              <button
+                onClick={() => setShowVideoModal(false)}
+                className="hover:underline cursor-pointer"
+                aria-label="Close modal"
+              >
+                CLOSE ×
+              </button>
+            </div>
+            
+            {/* Modal Viewport */}
+            <div className="relative pt-[56.25%] w-full bg-surface">
+              <iframe
+                src={getYouTubeEmbedUrl(project.videoUrl)}
+                className="absolute inset-0 w-full h-full border-0"
+                title={`${project.title} Walkthrough Video`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
