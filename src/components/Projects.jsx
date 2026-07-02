@@ -25,16 +25,14 @@ const getYouTubeEmbedUrl = (url) => {
 const ProjectItem = ({ project, index }) => {
   const hasVideo = !!project.videoUrl;
 
-  // Build the media list containing ONLY image screenshots (no video in carousel)
+  // Build a single combined media list for screenshots (landscape and portrait together)
   const mediaList = [];
-
   if (project.image) {
     mediaList.push({
       asset: project.image,
       alt: `${project.title} Cover`,
     });
   }
-
   if (project.landscapeImages && project.landscapeImages.length > 0) {
     project.landscapeImages.forEach((img, idx) => {
       mediaList.push({
@@ -43,7 +41,6 @@ const ProjectItem = ({ project, index }) => {
       });
     });
   }
-
   if (project.portraitImages && project.portraitImages.length > 0) {
     project.portraitImages.forEach((img, idx) => {
       mediaList.push({
@@ -64,14 +61,14 @@ const ProjectItem = ({ project, index }) => {
 
   const getMediaUrl = (asset) => {
     if (!asset) return "";
-    return typeof asset === "object" ? urlFor(asset).width(1200).url() : asset;
+    return typeof asset === "object" ? urlFor(asset).width(800).url() : asset;
   };
 
   return (
-    <div className="py-16 lg:py-24 flex flex-col space-y-6">
-      {/* Media Viewport Container — Full-Width, Centered, Capped height */}
-      <div className="w-full">
-        <div className="w-full bg-surface flex items-center justify-center overflow-hidden select-none h-[280px] sm:h-[400px] lg:h-[540px]">
+    <div className="py-16 lg:py-20 grid lg:grid-cols-10 gap-8 lg:gap-12 items-start">
+      {/* Project Media Viewport Slot — Centered, Constant height, no cropping */}
+      <div className="lg:col-span-6">
+        <div className="w-full bg-surface flex items-center justify-center overflow-hidden select-none h-[280px] sm:h-[380px] lg:h-[480px]">
           {project.status === "Coming Soon" ? (
             <div className="w-full h-full flex items-center justify-center font-sans text-xs tracking-[0.2em] uppercase font-bold text-muted">
               COMING SOON
@@ -86,96 +83,92 @@ const ProjectItem = ({ project, index }) => {
           )}
         </div>
 
-        {/* Controls toolbar directly below the viewport */}
+        {/* Media Controls Toolbar below the image */}
         {project.status !== "Coming Soon" && mediaList.length > 1 && (
           <div className="flex justify-between items-center mt-3 font-sans text-[10px] tracking-widest uppercase font-bold select-none">
+            {/* Left side: Slide indicator */}
             <span className="text-muted text-[9px]">
               {activeIndex + 1} / {mediaList.length}
             </span>
-            <button
-              onClick={handleNextMedia}
-              className="cursor-pointer text-ink hover:underline"
-            >
-              NEXT IMAGE →
-            </button>
+
+            {/* Right side: Navigation buttons */}
+            <div className="flex gap-4">
+              <button
+                onClick={handleNextMedia}
+                className="cursor-pointer underline underline-offset-4 hover:no-underline text-ink"
+              >
+                NEXT IMAGE →
+              </button>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Text Details Container — 10-column layout below media */}
-      <div className="grid lg:grid-cols-10 gap-6 lg:gap-12 items-start pt-2">
-        {/* Left Column: Index & Title & Description (6 cols) */}
-        <div className="lg:col-span-6 flex flex-col space-y-4">
-          <div className="flex items-baseline gap-4">
-            <span className="font-display text-4xl lg:text-5xl font-bold text-ink opacity-10 leading-none">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-            <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight uppercase text-ink">
-              {project.title}
-            </h3>
-          </div>
+      {/* Project Details */}
+      <div className="lg:col-span-4 flex flex-col justify-start space-y-4">
+        {/* Big index number */}
+        <span className="font-display text-5xl lg:text-6xl font-bold text-ink opacity-10 leading-none">
+          {String(index + 1).padStart(2, '0')}
+        </span>
 
-          <p className="font-sans text-xs tracking-wide leading-relaxed uppercase text-muted">
-            {project.description}
-          </p>
+        <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight uppercase text-ink mt-1">
+          {project.title}
+        </h3>
+
+        <p className="font-sans text-xs tracking-wide leading-relaxed uppercase text-muted">
+          {project.description}
+        </p>
+
+        {/* Technologies */}
+        <div className="font-sans text-[10px] tracking-wider uppercase text-muted">
+          {(project.technologies || []).join(" · ")}
         </div>
 
-        {/* Right Column: Technologies & CTA Links (4 cols) */}
-        <div className="lg:col-span-4 flex flex-col space-y-4 lg:pt-2">
-          <div>
-            <div className="font-sans text-[9px] tracking-[0.2em] uppercase text-muted mb-2 font-bold">
-              TECHNOLOGIES
-            </div>
-            <div className="font-sans text-[10px] tracking-wider uppercase text-ink font-bold leading-relaxed">
-              {(project.technologies || []).join(" · ")}
-            </div>
-          </div>
+        {/* Dynamic / Conditional Links */}
+        <div className="flex flex-wrap gap-4 pt-2 font-sans text-xs tracking-widest uppercase font-bold">
+          {project.status !== "Coming Soon" && (
+            <>
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4 hover:no-underline text-ink"
+                >
+                  LIVE DEMO
+                </a>
+              )}
+              
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4 hover:no-underline text-ink"
+                >
+                  CODE
+                </a>
+              )}
 
-          {/* CTAs */}
-          <div className="flex flex-wrap gap-4 pt-2 font-sans text-xs tracking-widest uppercase font-bold">
-            {project.status !== "Coming Soon" && (
-              <>
-                {project.liveUrl && (
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-4 hover:no-underline text-ink"
-                  >
-                    LIVE DEMO
-                  </a>
-                )}
-                
-                {project.githubUrl && (
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-4 hover:no-underline text-ink"
-                  >
-                    CODE
-                  </a>
-                )}
-
-                {/* Opens video walkthrough in modal */}
-                {hasVideo && (
-                  <button
-                    onClick={() => setShowVideoModal(true)}
-                    className="underline underline-offset-4 hover:no-underline text-ink cursor-pointer"
-                  >
-                    VIDEO DEMO
-                  </button>
-                )}
-              </>
-            )}
-          </div>
+              {/* Toggles video walkthrough display in a popup modal */}
+              {hasVideo && (
+                <button
+                  onClick={() => setShowVideoModal(true)}
+                  className="underline underline-offset-4 hover:no-underline text-ink cursor-pointer"
+                >
+                  VIDEO DEMO
+                </button>
+              )}
+            </>
+          )}
         </div>
       </div>
 
-      {/* Custom Video Modal Overlay */}
+      {/* Video Modal Overlay */}
       {showVideoModal && hasVideo && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ground/95 p-4 transition-colors duration-150">
           <div className="relative w-full max-w-4xl bg-ground border border-border-custom flex flex-col">
+            {/* Modal Header */}
             <div className="flex justify-between items-center px-4 py-3 border-b border-border-light font-sans text-[10px] tracking-widest uppercase font-bold text-ink">
               <span>PROJECT DEMO — {project.title}</span>
               <button
@@ -186,6 +179,8 @@ const ProjectItem = ({ project, index }) => {
                 CLOSE ×
               </button>
             </div>
+            
+            {/* Modal Viewport */}
             <div className="relative pt-[56.25%] w-full bg-surface">
               <iframe
                 src={getYouTubeEmbedUrl(project.videoUrl)}
