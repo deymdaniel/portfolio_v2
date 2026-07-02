@@ -36,6 +36,19 @@ export default {
       ],
     },
     {
+      name: 'layout',
+      type: 'string',
+      title: 'Project Layout / Orientation',
+      description: 'Choose landscape for websites, or portrait for mobile app screenshots/mockups',
+      options: {
+        list: [
+          { title: 'Landscape / Web (16:9)', value: 'landscape' },
+          { title: 'Portrait / Mobile (9:16)', value: 'portrait' },
+        ],
+      },
+      initialValue: 'landscape',
+    },
+    {
       name: 'technologies',
       type: 'array',
       title: 'Technologies Used',

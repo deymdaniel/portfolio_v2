@@ -23,43 +23,67 @@ const getYouTubeEmbedUrl = (url) => {
 };
 
 const ProjectItem = ({ project, index }) => {
-  const hasVideo = !!project.videoUrl;
-  const hasGallery = project.images && project.images.length > 0;
-  
-  // State to track what is rendered in the viewport slot: 'cover', 'video', or index (number) of gallery image
-  const [activeMedia, setActiveMedia] = useState("cover");
+  const isPortrait = project.layout === "portrait";
 
-  // Resolve cover image URL
-  let coverImageUrl = "";
+  // Build the media list array containing all available visual assets
+  const mediaList = [];
+
   if (project.image) {
-    coverImageUrl = typeof project.image === "object"
-      ? urlFor(project.image).width(800).url()
-      : project.image;
+    mediaList.push({
+      type: "image",
+      asset: project.image,
+      alt: `${project.title} Cover`,
+    });
   }
 
-  // Resolve gallery image URL if a specific index is active
-  let activeImageUrl = coverImageUrl;
-  if (typeof activeMedia === "number" && hasGallery) {
-    const targetImage = project.images[activeMedia];
-    if (targetImage) {
-      activeImageUrl = typeof targetImage === "object"
-        ? urlFor(targetImage).width(800).url()
-        : targetImage;
-    }
+  if (project.images && project.images.length > 0) {
+    project.images.forEach((img, idx) => {
+      mediaList.push({
+        type: "image",
+        asset: img,
+        alt: `${project.title} Screenshot ${idx + 1}`,
+      });
+    });
   }
+
+  if (project.videoUrl) {
+    mediaList.push({
+      type: "video",
+      url: project.videoUrl,
+    });
+  }
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const currentMedia = mediaList[activeIndex];
+
+  const handleNextMedia = () => {
+    if (mediaList.length <= 1) return;
+    setActiveIndex((prev) => (prev + 1) % mediaList.length);
+  };
+
+  const getMediaUrl = (asset) => {
+    if (!asset) return "";
+    return typeof asset === "object" ? urlFor(asset).width(800).url() : asset;
+  };
 
   return (
     <div className="py-16 lg:py-20 grid lg:grid-cols-10 gap-8 lg:gap-12 items-start">
       {/* Project Media Viewport Slot */}
       <div className="lg:col-span-6">
-        <div className="aspect-video overflow-hidden bg-surface relative">
+        <div 
+          className={`overflow-hidden bg-surface relative select-none
+            ${isPortrait 
+              ? "aspect-[9/16] max-w-[320px] w-full" 
+              : "aspect-video w-full"
+            }`}
+        >
           {project.status === "Coming Soon" ? (
             <div className="w-full h-full flex items-center justify-center font-sans text-xs tracking-[0.2em] uppercase font-bold text-muted">
               COMING SOON
             </div>
-          ) : activeMedia === "video" && hasVideo ? (
+          ) : currentMedia?.type === "video" ? (
             <iframe
-              src={getYouTubeEmbedUrl(project.videoUrl)}
+              src={getYouTubeEmbedUrl(currentMedia.url)}
               className="w-full h-full border-0 absolute inset-0"
               title={`${project.title} Walkthrough`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -67,43 +91,30 @@ const ProjectItem = ({ project, index }) => {
             ></iframe>
           ) : (
             <img
-              src={activeImageUrl}
-              alt={project.title}
-              className="w-full h-full object-cover"
+              src={getMediaUrl(currentMedia?.asset)}
+              alt={currentMedia?.alt || project.title}
+              onClick={handleNextMedia}
+              className={`w-full h-full object-cover ${mediaList.length > 1 ? "cursor-pointer" : ""}`}
             />
           )}
-        </div>
 
-        {/* Media Controls Toolbar (Brutalist style) */}
-        {project.status !== "Coming Soon" && (hasGallery || hasVideo) && (
-          <div className="flex flex-wrap gap-x-2 gap-y-1 mt-3 font-sans text-[9px] tracking-widest uppercase text-muted">
+          {/* Inline cycle button (Brutalist style) */}
+          {mediaList.length > 1 && (
             <button
-              onClick={() => setActiveMedia("cover")}
-              className={`cursor-pointer ${activeMedia === "cover" ? "font-bold text-ink underline underline-offset-2" : "hover:text-ink"}`}
+              onClick={handleNextMedia}
+              className="absolute top-3 right-3 bg-ground text-ink border border-border-custom px-2 py-1 text-[9px] font-bold tracking-widest uppercase hover:bg-ink hover:text-ground cursor-pointer transition-colors duration-150 z-10"
             >
-              [ COVER ]
+              NEXT →
             </button>
-            
-            {hasGallery && project.images.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveMedia(idx)}
-                className={`cursor-pointer ${activeMedia === idx ? "font-bold text-ink underline underline-offset-2" : "hover:text-ink"}`}
-              >
-                [ SHOT {String(idx + 1).padStart(2, '0')} ]
-              </button>
-            ))}
+          )}
 
-            {hasVideo && (
-              <button
-                onClick={() => setActiveMedia("video")}
-                className={`cursor-pointer ${activeMedia === "video" ? "font-bold text-ink underline underline-offset-2" : "hover:text-ink"}`}
-              >
-                [ VIDEO ]
-              </button>
-            )}
-          </div>
-        )}
+          {/* Slide Indicator Overlay */}
+          {mediaList.length > 1 && (
+            <div className="absolute bottom-3 right-3 bg-ground/85 text-ink px-2 py-1 text-[8px] font-bold tracking-widest uppercase pointer-events-none select-none">
+              {activeIndex + 1} / {mediaList.length} {currentMedia?.type === "image" ? "· CLICK IMAGE" : ""}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Project Details */}
@@ -152,12 +163,16 @@ const ProjectItem = ({ project, index }) => {
                 </a>
               )}
 
-              {hasVideo && activeMedia !== "video" && (
+              {/* Direct jump to video in cycle if available */}
+              {project.videoUrl && currentMedia?.type !== "video" && (
                 <button
-                  onClick={() => setActiveMedia("video")}
+                  onClick={() => {
+                    const videoIdx = mediaList.findIndex(m => m.type === "video");
+                    if (videoIdx !== -1) setActiveIndex(videoIdx);
+                  }}
                   className="underline underline-offset-4 hover:no-underline text-ink cursor-pointer"
                 >
-                  VIDEO
+                  VIDEO DEMO
                 </button>
               )}
             </>
