@@ -52,6 +52,7 @@ const ProjectItem = ({ project, index }) => {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [showZoomModal, setShowZoomModal] = useState(false);
   const currentMedia = mediaList[activeIndex];
 
   const handleNextMedia = () => {
@@ -77,8 +78,8 @@ const ProjectItem = ({ project, index }) => {
             <img
               src={getMediaUrl(currentMedia?.asset)}
               alt={currentMedia?.alt || project.title}
-              onClick={handleNextMedia}
-              className={`h-full w-auto object-contain ${mediaList.length > 1 ? "cursor-pointer" : ""}`}
+              onClick={() => setShowZoomModal(true)}
+              className="h-full w-auto object-contain cursor-zoom-in"
             />
           )}
         </div>
@@ -189,6 +190,40 @@ const ProjectItem = ({ project, index }) => {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
               ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Zoom Modal Overlay */}
+      {showZoomModal && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-ground/95 p-4 transition-colors duration-150 cursor-zoom-out"
+          onClick={() => setShowZoomModal(false)}
+        >
+          <div 
+            className="relative max-w-5xl max-h-[90vh] bg-ground border border-border-custom flex flex-col cursor-default"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex justify-between items-center px-4 py-3 border-b border-border-light font-sans text-[10px] tracking-widest uppercase font-bold text-ink">
+              <span>SCREENSHOT ZOOM — {project.title}</span>
+              <button
+                onClick={() => setShowZoomModal(false)}
+                className="hover:underline cursor-pointer"
+                aria-label="Close zoom modal"
+              >
+                CLOSE ×
+              </button>
+            </div>
+            
+            {/* Image Box */}
+            <div className="bg-surface flex items-center justify-center p-2 overflow-auto max-h-[80vh]">
+              <img
+                src={getMediaUrl(currentMedia?.asset)}
+                alt={currentMedia?.alt || project.title}
+                className="max-h-[75vh] w-auto object-contain"
+              />
             </div>
           </div>
         </div>
