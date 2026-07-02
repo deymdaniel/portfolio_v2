@@ -25,85 +25,114 @@ const getYouTubeEmbedUrl = (url) => {
 const ProjectItem = ({ project, index }) => {
   const hasVideo = !!project.videoUrl;
 
-  // Build list of landscape screenshots (web)
-  const landscapeList = [];
+  // Build the media list containing ONLY image screenshots (no video in carousel)
+  const mediaList = [];
+
   if (project.image) {
-    landscapeList.push({
+    mediaList.push({
       asset: project.image,
-      alt: `${project.title} Desktop Cover`,
+      alt: `${project.title} Cover`,
     });
   }
+
   if (project.landscapeImages && project.landscapeImages.length > 0) {
     project.landscapeImages.forEach((img, idx) => {
-      landscapeList.push({
+      mediaList.push({
         asset: img,
         alt: `${project.title} Desktop Screenshot ${idx + 1}`,
       });
     });
   }
 
-  // Build list of portrait screenshots (mobile mockups)
-  const portraitList = [];
   if (project.portraitImages && project.portraitImages.length > 0) {
     project.portraitImages.forEach((img, idx) => {
-      portraitList.push({
+      mediaList.push({
         asset: img,
         alt: `${project.title} Mobile Mockup ${idx + 1}`,
       });
     });
   }
 
-  const [activeLandscapeIdx, setActiveLandscapeIdx] = useState(0);
-  const [activePortraitIdx, setActivePortraitIdx] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const currentMedia = mediaList[activeIndex];
 
-  const handleNextLandscape = () => {
-    if (landscapeList.length <= 1) return;
-    setActiveLandscapeIdx((prev) => (prev + 1) % landscapeList.length);
-  };
-
-  const handleNextPortrait = () => {
-    if (portraitList.length <= 1) return;
-    setActivePortraitIdx((prev) => (prev + 1) % portraitList.length);
+  const handleNextMedia = () => {
+    if (mediaList.length <= 1) return;
+    setActiveIndex((prev) => (prev + 1) % mediaList.length);
   };
 
   const getMediaUrl = (asset) => {
     if (!asset) return "";
-    return typeof asset === "object" ? urlFor(asset).width(800).url() : asset;
+    return typeof asset === "object" ? urlFor(asset).width(1200).url() : asset;
   };
 
-  const showSplit = landscapeList.length > 0 && portraitList.length > 0;
-  const hasMultipleLandscape = landscapeList.length > 1;
-  const hasMultiplePortrait = portraitList.length > 1;
-
   return (
-    <div className="py-20 lg:py-24 flex flex-col w-full">
-      {/* Project Details Header Grid (10 columns to match layout) */}
-      <div className="grid lg:grid-cols-10 gap-6 lg:gap-12 items-end w-full mb-10 lg:mb-12">
-        {/* Left Col: Index, Title, and Description */}
-        <div className="lg:col-span-6 flex flex-col justify-start">
-          <span className="font-display text-5xl lg:text-6xl font-bold text-ink opacity-10 leading-none">
-            {String(index + 1).padStart(2, '0')}
-          </span>
+    <div className="py-16 lg:py-24 flex flex-col space-y-6">
+      {/* Media Viewport Container — Full-Width, Centered, Capped height */}
+      <div className="w-full">
+        <div className="w-full bg-surface flex items-center justify-center overflow-hidden select-none h-[280px] sm:h-[400px] lg:h-[540px]">
+          {project.status === "Coming Soon" ? (
+            <div className="w-full h-full flex items-center justify-center font-sans text-xs tracking-[0.2em] uppercase font-bold text-muted">
+              COMING SOON
+            </div>
+          ) : (
+            <img
+              src={getMediaUrl(currentMedia?.asset)}
+              alt={currentMedia?.alt || project.title}
+              onClick={handleNextMedia}
+              className={`h-full w-auto object-contain ${mediaList.length > 1 ? "cursor-pointer" : ""}`}
+            />
+          )}
+        </div>
 
-          <h3 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight uppercase text-ink mt-2">
-            {project.title}
-          </h3>
+        {/* Controls toolbar directly below the viewport */}
+        {project.status !== "Coming Soon" && mediaList.length > 1 && (
+          <div className="flex justify-between items-center mt-3 font-sans text-[10px] tracking-widest uppercase font-bold select-none">
+            <span className="text-muted text-[9px]">
+              {activeIndex + 1} / {mediaList.length}
+            </span>
+            <button
+              onClick={handleNextMedia}
+              className="cursor-pointer text-ink hover:underline"
+            >
+              NEXT IMAGE →
+            </button>
+          </div>
+        )}
+      </div>
 
-          <p className="font-sans text-xs tracking-wide leading-relaxed uppercase text-muted mt-4 max-w-xl">
+      {/* Text Details Container — 10-column layout below media */}
+      <div className="grid lg:grid-cols-10 gap-6 lg:gap-12 items-start pt-2">
+        {/* Left Column: Index & Title & Description (6 cols) */}
+        <div className="lg:col-span-6 flex flex-col space-y-4">
+          <div className="flex items-baseline gap-4">
+            <span className="font-display text-4xl lg:text-5xl font-bold text-ink opacity-10 leading-none">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight uppercase text-ink">
+              {project.title}
+            </h3>
+          </div>
+
+          <p className="font-sans text-xs tracking-wide leading-relaxed uppercase text-muted">
             {project.description}
           </p>
         </div>
 
-        {/* Right Col: Technologies and Action Links */}
-        <div className="lg:col-span-4 flex flex-col justify-end space-y-4 lg:pb-1">
-          {/* Technologies */}
-          <div className="font-sans text-[10px] tracking-wider uppercase text-muted">
-            {(project.technologies || []).join(" · ")}
+        {/* Right Column: Technologies & CTA Links (4 cols) */}
+        <div className="lg:col-span-4 flex flex-col space-y-4 lg:pt-2">
+          <div>
+            <div className="font-sans text-[9px] tracking-[0.2em] uppercase text-muted mb-2 font-bold">
+              TECHNOLOGIES
+            </div>
+            <div className="font-sans text-[10px] tracking-wider uppercase text-ink font-bold leading-relaxed">
+              {(project.technologies || []).join(" · ")}
+            </div>
           </div>
 
-          {/* Dynamic Links */}
-          <div className="flex flex-wrap gap-4 pt-1 font-sans text-xs tracking-widest uppercase font-bold">
+          {/* CTAs */}
+          <div className="flex flex-wrap gap-4 pt-2 font-sans text-xs tracking-widest uppercase font-bold">
             {project.status !== "Coming Soon" && (
               <>
                 {project.liveUrl && (
@@ -128,6 +157,7 @@ const ProjectItem = ({ project, index }) => {
                   </a>
                 )}
 
+                {/* Opens video walkthrough in modal */}
                 {hasVideo && (
                   <button
                     onClick={() => setShowVideoModal(true)}
@@ -142,99 +172,10 @@ const ProjectItem = ({ project, index }) => {
         </div>
       </div>
 
-      {/* Project Media Showcase Section */}
-      <div className="w-full">
-        {project.status === "Coming Soon" ? (
-          <div className="w-full bg-surface overflow-hidden select-none h-[280px] sm:h-[340px] lg:h-[380px] flex items-center justify-center font-sans text-xs tracking-[0.2em] uppercase font-bold text-muted">
-            COMING SOON
-          </div>
-        ) : showSplit ? (
-          /* Split media view: Web (Landscape) on left, Mobile (Portrait Mockup) on right */
-          <div className="flex flex-col md:flex-row gap-8 items-stretch w-full">
-            {/* Left: Landscape Website (spans remaining width) */}
-            <div className="flex-1 flex flex-col">
-              <div className="w-full bg-surface flex items-center justify-center overflow-hidden h-[240px] sm:h-[360px] lg:h-[480px]">
-                <img
-                  src={getMediaUrl(landscapeList[activeLandscapeIdx]?.asset)}
-                  alt={landscapeList[activeLandscapeIdx]?.alt}
-                  onClick={handleNextLandscape}
-                  className={`h-full w-auto object-contain ${hasMultipleLandscape ? "cursor-pointer" : ""}`}
-                />
-              </div>
-              
-              {hasMultipleLandscape && (
-                <div className="flex justify-between items-center mt-3 font-sans text-[9px] tracking-widest uppercase font-bold select-none">
-                  <span className="text-muted">{activeLandscapeIdx + 1} / {landscapeList.length}</span>
-                  <button onClick={handleNextLandscape} className="cursor-pointer text-ink hover:underline">NEXT WEB →</button>
-                </div>
-              )}
-            </div>
-
-            {/* Right: Portrait Phone Mockup (constant size next to web) */}
-            <div className="w-full md:w-[35%] flex flex-col">
-              <div className="w-full bg-surface flex items-center justify-center overflow-hidden h-[240px] sm:h-[360px] lg:h-[480px]">
-                <img
-                  src={getMediaUrl(portraitList[activePortraitIdx]?.asset)}
-                  alt={portraitList[activePortraitIdx]?.alt}
-                  onClick={handleNextPortrait}
-                  className={`h-full w-auto object-contain ${hasMultiplePortrait ? "cursor-pointer" : ""}`}
-                />
-              </div>
-
-              {hasMultiplePortrait && (
-                <div className="flex justify-between items-center mt-3 font-sans text-[9px] tracking-widest uppercase font-bold select-none">
-                  <span className="text-muted">{activePortraitIdx + 1} / {portraitList.length}</span>
-                  <button onClick={handleNextPortrait} className="cursor-pointer text-ink hover:underline">NEXT MOBILE →</button>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : landscapeList.length > 0 ? (
-          /* Landscape screenshot only (Full Width) */
-          <div className="w-full flex flex-col">
-            <div className="w-full bg-surface flex items-center justify-center lg:justify-start overflow-hidden select-none h-[280px] sm:h-[400px] lg:h-[500px]">
-              <img
-                src={getMediaUrl(landscapeList[activeLandscapeIdx]?.asset)}
-                alt={landscapeList[activeLandscapeIdx]?.alt}
-                onClick={handleNextLandscape}
-                className={`h-full w-auto object-contain ${hasMultipleLandscape ? "cursor-pointer" : ""}`}
-              />
-            </div>
-            
-            {hasMultipleLandscape && (
-              <div className="flex justify-between items-center mt-3 font-sans text-[9px] tracking-widest uppercase font-bold select-none">
-                <span className="text-muted">{activeLandscapeIdx + 1} / {landscapeList.length}</span>
-                <button onClick={handleNextLandscape} className="cursor-pointer text-ink hover:underline">NEXT IMAGE →</button>
-              </div>
-            )}
-          </div>
-        ) : (
-          /* Portrait mockup only (Centered slot) */
-          <div className="flex flex-col max-w-[340px] w-full mx-auto lg:mx-0">
-            <div className="w-full bg-surface flex items-center justify-center overflow-hidden select-none h-[420px] lg:h-[540px]">
-              <img
-                src={getMediaUrl(portraitList[activePortraitIdx]?.asset)}
-                alt={portraitList[activePortraitIdx]?.alt}
-                onClick={handleNextPortrait}
-                className={`h-full w-auto object-contain ${hasMultiplePortrait ? "cursor-pointer" : ""}`}
-              />
-            </div>
-
-            {hasMultiplePortrait && (
-              <div className="flex justify-between items-center mt-3 font-sans text-[9px] tracking-widest uppercase font-bold select-none">
-                <span className="text-muted">{activePortraitIdx + 1} / {portraitList.length}</span>
-                <button onClick={handleNextPortrait} className="cursor-pointer text-ink hover:underline">NEXT IMAGE →</button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Video Modal Overlay */}
+      {/* Custom Video Modal Overlay */}
       {showVideoModal && hasVideo && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ground/95 p-4 transition-colors duration-150">
           <div className="relative w-full max-w-4xl bg-ground border border-border-custom flex flex-col">
-            {/* Modal Header */}
             <div className="flex justify-between items-center px-4 py-3 border-b border-border-light font-sans text-[10px] tracking-widest uppercase font-bold text-ink">
               <span>PROJECT DEMO — {project.title}</span>
               <button
@@ -245,8 +186,6 @@ const ProjectItem = ({ project, index }) => {
                 CLOSE ×
               </button>
             </div>
-            
-            {/* Modal Viewport */}
             <div className="relative pt-[56.25%] w-full bg-surface">
               <iframe
                 src={getYouTubeEmbedUrl(project.videoUrl)}
@@ -284,7 +223,7 @@ const Projects = ({ projects }) => {
       </div>
 
       {/* Project Stack */}
-      <div className="divide-y divide-border-light/10">
+      <div>
         {displayProjects.map((project, index) => (
           <ProjectItem
             key={project._id || project.id}
