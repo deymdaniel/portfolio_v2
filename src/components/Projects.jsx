@@ -23,8 +23,7 @@ const getYouTubeEmbedUrl = (url) => {
 };
 
 const ProjectItem = ({ project, index }) => {
-  const isPortrait = project.layout === "portrait";
-
+  const hasVideo = !!project.videoUrl;
   // Build the media list array containing all available visual assets
   const mediaList = [];
 
@@ -66,55 +65,76 @@ const ProjectItem = ({ project, index }) => {
     return typeof asset === "object" ? urlFor(asset).width(800).url() : asset;
   };
 
+  const hasMultipleImages = mediaList.filter(m => m.type === "image").length > 1;
+
   return (
     <div className="py-16 lg:py-20 grid lg:grid-cols-10 gap-8 lg:gap-12 items-start">
       {/* Project Media Viewport Slot */}
       <div className="lg:col-span-6">
-        <div 
-          className={`overflow-hidden bg-surface relative select-none
-            ${isPortrait 
-              ? "aspect-[9/16] max-w-[320px] w-full" 
-              : "aspect-video w-full"
-            }`}
-        >
+        <div className="w-full bg-surface flex items-center justify-center lg:justify-start overflow-hidden select-none max-h-[450px] lg:max-h-[500px]">
           {project.status === "Coming Soon" ? (
-            <div className="w-full h-full flex items-center justify-center font-sans text-xs tracking-[0.2em] uppercase font-bold text-muted">
+            <div className="w-full aspect-video flex items-center justify-center font-sans text-xs tracking-[0.2em] uppercase font-bold text-muted">
               COMING SOON
             </div>
           ) : currentMedia?.type === "video" ? (
-            <iframe
-              src={getYouTubeEmbedUrl(currentMedia.url)}
-              className="w-full h-full border-0 absolute inset-0"
-              title={`${project.title} Walkthrough`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            ></iframe>
+            <div className="w-full aspect-video">
+              <iframe
+                src={getYouTubeEmbedUrl(currentMedia.url)}
+                className="w-full h-full border-0"
+                title={`${project.title} Walkthrough`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            </div>
           ) : (
             <img
               src={getMediaUrl(currentMedia?.asset)}
               alt={currentMedia?.alt || project.title}
               onClick={handleNextMedia}
-              className={`w-full h-full object-cover ${mediaList.length > 1 ? "cursor-pointer" : ""}`}
+              className={`max-h-[450px] lg:max-h-[500px] w-auto object-contain ${mediaList.length > 1 ? "cursor-pointer" : ""}`}
             />
           )}
-
-          {/* Inline cycle button (Brutalist style) */}
-          {mediaList.length > 1 && (
-            <button
-              onClick={handleNextMedia}
-              className="absolute top-3 right-3 bg-ground text-ink border border-border-custom px-2 py-1 text-[9px] font-bold tracking-widest uppercase hover:bg-ink hover:text-ground cursor-pointer transition-colors duration-150 z-10"
-            >
-              NEXT →
-            </button>
-          )}
-
-          {/* Slide Indicator Overlay */}
-          {mediaList.length > 1 && (
-            <div className="absolute bottom-3 right-3 bg-ground/85 text-ink px-2 py-1 text-[8px] font-bold tracking-widest uppercase pointer-events-none select-none">
-              {activeIndex + 1} / {mediaList.length} {currentMedia?.type === "image" ? "· CLICK IMAGE" : ""}
-            </div>
-          )}
         </div>
+
+        {/* Media Controls Toolbar (Brutalist style) below the image */}
+        {project.status !== "Coming Soon" && mediaList.length > 1 && (
+          <div className="flex justify-between items-center mt-3 font-sans text-[10px] tracking-widest uppercase font-bold">
+            {/* Left side: Slide indicator */}
+            <span className="text-muted text-[9px]">
+              {activeIndex + 1} / {mediaList.length}
+            </span>
+
+            {/* Right side: Navigation buttons */}
+            <div className="flex gap-4">
+              {hasVideo && (
+                <button
+                  onClick={() => {
+                    const videoIdx = mediaList.findIndex(m => m.type === "video");
+                    if (videoIdx !== -1) {
+                      if (currentMedia?.type === "video") {
+                        setActiveIndex(0); // Reset to cover image
+                      } else {
+                        setActiveIndex(videoIdx); // Go to video
+                      }
+                    }
+                  }}
+                  className={`cursor-pointer underline underline-offset-4 hover:no-underline ${currentMedia?.type === "video" ? "text-ink font-black" : "text-muted"}`}
+                >
+                  {currentMedia?.type === "video" ? "VIEW IMAGES" : "WATCH WALKTHROUGH"}
+                </button>
+              )}
+
+              {currentMedia?.type === "image" && hasMultipleImages && (
+                <button
+                  onClick={handleNextMedia}
+                  className="cursor-pointer underline underline-offset-4 hover:no-underline text-ink"
+                >
+                  NEXT IMAGE →
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Project Details */}
