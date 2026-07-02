@@ -4,7 +4,7 @@
 export const config = {
   // Personal Information
   name: "Daniel Biacan III",
-  title: "Full Stack Web & App developer",
+  title: "Full-Stack Web & App developer",
   email: "danielbiacaniii@gmail.com",
   location: "Manila, Philippines",
 
@@ -30,40 +30,6 @@ export const config = {
     instagram: "https://www.instagram.com/danielb.iii/",
     facebook: "https://www.facebook.com/danieliii.biacan",
   },
-
-  // Projects
-  projects: [
-    {
-      id: 1,
-      title: "Ecommerce Website",
-      description:
-        "A website for an ecommerce store that sells jewelry. I handled the frontend development using React and Tailwind CSS.",
-      image: "/assets/amrah.png", // Changed from /src/assets/portfolio.png
-      technologies: ["React", "Tailwind CSS", "JavaScript"],
-      liveUrl: "https://amrah-jewelry.vercel.app/",
-      githubUrl: "https://github.com/deymdaniel/amrah-jewelry",
-    },
-    {
-      id: 2,
-      title: "Subscription Manager",
-      description:
-        "A web application that helps users manage their subscriptions and track expenses. Uses Firebase for backend services.",
-      image: "/assets/subtrack.png",
-      technologies: ["React", "Tailwind CSS", "JavaScript", "Firebase"],
-      liveUrl: "https://subscription-manager-web-app.vercel.app/",
-      githubUrl: "https://github.com/deymdaniel/subscription-manager-web-app",
-    },
-    {
-      id: 3,
-      title: "Salon Landing Page Prototype",
-      description:
-        "A prototype for a salon landing page featuring a modern design and user-friendly interface.",
-      image: "/assets/salon.png",
-      technologies: ["React", "Tailwind CSS", "Responsive Design"],
-      liveUrl: "https://salon-website-prototype.vercel.app/",
-      githubUrl: "https://github.com/deymdaniel/salon_website_prototype",
-    },
-  ],
 
   // Color scheme - easily customizable
   colors: {

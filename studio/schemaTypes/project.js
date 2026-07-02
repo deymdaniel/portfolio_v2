@@ -16,10 +16,24 @@ export default {
     {
       name: 'image',
       type: 'image',
-      title: 'Project Screenshot',
+      title: 'Project Screenshot (Cover)',
       options: {
         hotspot: true, // Enables UI for cropping and selecting focal point
       },
+    },
+    {
+      name: 'images',
+      type: 'array',
+      title: 'Project Gallery (Optional)',
+      description: 'Additional screenshots to showcase this project',
+      of: [
+        {
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+        },
+      ],
     },
     {
       name: 'technologies',

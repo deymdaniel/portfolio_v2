@@ -23,7 +23,7 @@ const Hero = () => {
       </div>
 
       <div>
-        <h1 className="font-display text-[6rem] sm:text-[6rem] lg:text-[8rem] xl:text-[8rem] font-semibold tracking-tighter uppercase leading-[0.85] text-ink select-none">
+        <h1 className="font-display text-[5rem] sm:text-[6rem] lg:text-[8rem] xl:text-[8rem] font-semibold tracking-tighter uppercase leading-[0.85] text-ink select-none">
           {name.replace("Biacan III", "Biacan\u00a0III")}
         </h1>
 

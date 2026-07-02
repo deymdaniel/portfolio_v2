@@ -22,14 +22,159 @@ const getYouTubeEmbedUrl = (url) => {
   return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
 };
 
+const ProjectItem = ({ project, index }) => {
+  const hasVideo = !!project.videoUrl;
+  const hasGallery = project.images && project.images.length > 0;
+  
+  // State to track what is rendered in the viewport slot: 'cover', 'video', or index (number) of gallery image
+  const [activeMedia, setActiveMedia] = useState("cover");
+
+  // Resolve cover image URL
+  let coverImageUrl = "";
+  if (project.image) {
+    coverImageUrl = typeof project.image === "object"
+      ? urlFor(project.image).width(800).url()
+      : project.image;
+  }
+
+  // Resolve gallery image URL if a specific index is active
+  let activeImageUrl = coverImageUrl;
+  if (typeof activeMedia === "number" && hasGallery) {
+    const targetImage = project.images[activeMedia];
+    if (targetImage) {
+      activeImageUrl = typeof targetImage === "object"
+        ? urlFor(targetImage).width(800).url()
+        : targetImage;
+    }
+  }
+
+  return (
+    <div className="py-16 lg:py-20 grid lg:grid-cols-10 gap-8 lg:gap-12 items-start">
+      {/* Project Media Viewport Slot */}
+      <div className="lg:col-span-6">
+        <div className="aspect-video overflow-hidden bg-surface relative">
+          {project.status === "Coming Soon" ? (
+            <div className="w-full h-full flex items-center justify-center font-sans text-xs tracking-[0.2em] uppercase font-bold text-muted">
+              COMING SOON
+            </div>
+          ) : activeMedia === "video" && hasVideo ? (
+            <iframe
+              src={getYouTubeEmbedUrl(project.videoUrl)}
+              className="w-full h-full border-0 absolute inset-0"
+              title={`${project.title} Walkthrough`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            ></iframe>
+          ) : (
+            <img
+              src={activeImageUrl}
+              alt={project.title}
+              className="w-full h-full object-cover"
+            />
+          )}
+        </div>
+
+        {/* Media Controls Toolbar (Brutalist style) */}
+        {project.status !== "Coming Soon" && (hasGallery || hasVideo) && (
+          <div className="flex flex-wrap gap-x-2 gap-y-1 mt-3 font-sans text-[9px] tracking-widest uppercase text-muted">
+            <button
+              onClick={() => setActiveMedia("cover")}
+              className={`cursor-pointer ${activeMedia === "cover" ? "font-bold text-ink underline underline-offset-2" : "hover:text-ink"}`}
+            >
+              [ COVER ]
+            </button>
+            
+            {hasGallery && project.images.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveMedia(idx)}
+                className={`cursor-pointer ${activeMedia === idx ? "font-bold text-ink underline underline-offset-2" : "hover:text-ink"}`}
+              >
+                [ SHOT {String(idx + 1).padStart(2, '0')} ]
+              </button>
+            ))}
+
+            {hasVideo && (
+              <button
+                onClick={() => setActiveMedia("video")}
+                className={`cursor-pointer ${activeMedia === "video" ? "font-bold text-ink underline underline-offset-2" : "hover:text-ink"}`}
+              >
+                [ VIDEO ]
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Project Details */}
+      <div className="lg:col-span-4 flex flex-col justify-start space-y-4">
+        {/* Big index number */}
+        <span className="font-display text-5xl lg:text-6xl font-bold text-ink opacity-10 leading-none">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+
+        <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight uppercase text-ink mt-1">
+          {project.title}
+        </h3>
+
+        <p className="font-sans text-xs tracking-wide leading-relaxed uppercase text-muted">
+          {project.description}
+        </p>
+
+        {/* Technologies */}
+        <div className="font-sans text-[10px] tracking-wider uppercase text-muted">
+          {(project.technologies || []).join(" · ")}
+        </div>
+
+        {/* Dynamic / Conditional Links */}
+        <div className="flex flex-wrap gap-4 pt-2 font-sans text-xs tracking-widest uppercase font-bold">
+          {project.status !== "Coming Soon" && (
+            <>
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4 hover:no-underline text-ink"
+                >
+                  LIVE DEMO
+                </a>
+              )}
+              
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4 hover:no-underline text-ink"
+                >
+                  CODE
+                </a>
+              )}
+
+              {hasVideo && activeMedia !== "video" && (
+                <button
+                  onClick={() => setActiveMedia("video")}
+                  className="underline underline-offset-4 hover:no-underline text-ink cursor-pointer"
+                >
+                  VIDEO
+                </button>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Projects = ({ projects }) => {
   const displayProjects = projects && projects.length > 0 ? projects : config.projects;
-  const [activeVideo, setActiveVideo] = useState(null);
 
   return (
     <section id="projects" className="py-24 lg:py-32 px-2 md:px-4 relative overflow-hidden">
       {/* Watermark number */}
-      <div className="absolute lg:-top-8 lg:-left-2 top-2 left-2 font-display text-[10rem] lg:text-[16rem] font-bold text-ink opacity-[0.05] dark:opacity-[0.1] leading-none select-none pointer-events-none">
+      <div className="absolute -top-8 -left-2 font-display text-[10rem] lg:text-[16rem] font-bold text-ink opacity-[0.05] dark:opacity-[0.1] leading-none select-none pointer-events-none">
         02
       </div>
 
@@ -45,93 +190,13 @@ const Projects = ({ projects }) => {
 
       {/* Project Stack */}
       <div>
-        {displayProjects.map((project, index) => {
-          const hasVideo = !!project.videoUrl;
-
-          let imageUrl = "";
-          if (project.image) {
-            imageUrl = typeof project.image === "object"
-              ? urlFor(project.image).width(800).url()
-              : project.image;
-          }
-
-          return (
-            <div
-              key={project._id || project.id}
-              className="py-16 lg:py-20 grid lg:grid-cols-10 gap-8 lg:gap-12 items-start"
-            >
-              {/* Project Image — full color, no effects */}
-              <div className="lg:col-span-6">
-                <div className="aspect-video overflow-hidden bg-surface">
-                  {project.status === "Coming Soon" ? (
-                    <div className="w-full h-full flex items-center justify-center font-sans text-xs tracking-[0.2em] uppercase font-bold text-muted">
-                      COMING SOON
-                    </div>
-                  ) : (
-                    <img
-                      src={imageUrl}
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-              </div>
-
-              {/* Project Details */}
-              <div className="lg:col-span-4 flex flex-col justify-start space-y-4">
-                {/* Big index number */}
-                <span className="font-display text-5xl lg:text-6xl font-bold text-ink opacity-10 leading-none">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-
-                <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight uppercase text-ink mt-1">
-                  {project.title}
-                </h3>
-
-                <p className="font-sans text-xs tracking-wide leading-relaxed uppercase text-muted">
-                  {project.description}
-                </p>
-
-                {/* Technologies — separated by middle dot */}
-                <div className="font-sans text-[10px] tracking-wider uppercase text-muted">
-                  {(project.technologies || []).join(" · ")}
-                </div>
-
-                {/* Links — no brackets */}
-                <div className="flex flex-wrap gap-4 pt-2 font-sans text-xs tracking-widest uppercase font-bold">
-                  {project.status !== "Coming Soon" && (
-                    <>
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline underline-offset-4 hover:no-underline text-ink"
-                      >
-                        LIVE DEMO
-                      </a>
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline underline-offset-4 hover:no-underline text-ink"
-                      >
-                        CODE
-                      </a>
-                      {hasVideo && (
-                        <button
-                          onClick={() => setActiveVideo(getYouTubeEmbedUrl(project.videoUrl))}
-                          className="underline underline-offset-4 hover:no-underline text-ink cursor-pointer"
-                        >
-                          VIDEO
-                        </button>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {displayProjects.map((project, index) => (
+          <ProjectItem
+            key={project._id || project.id}
+            project={project}
+            index={index}
+          />
+        ))}
       </div>
 
       {/* View More */}
@@ -145,33 +210,6 @@ const Projects = ({ projects }) => {
           VIEW MORE ON GITHUB
         </a>
       </div>
-
-      {/* Video Modal */}
-      {activeVideo && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ground/95 p-4">
-          <div className="relative w-full max-w-5xl bg-ground border border-border-custom">
-            <div className="flex justify-between items-center px-4 py-3 border-b border-border-light font-sans text-[10px] tracking-widest uppercase font-bold">
-              <span>PROJECT DEMO</span>
-              <button
-                onClick={() => setActiveVideo(null)}
-                className="hover:underline cursor-pointer"
-                aria-label="Close modal"
-              >
-                CLOSE ×
-              </button>
-            </div>
-            <div className="relative pt-[56.25%] w-full bg-ink/5">
-              <iframe
-                src={activeVideo}
-                className="absolute inset-0 w-full h-full border-0"
-                title="Project Walkthrough Video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              ></iframe>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 };
