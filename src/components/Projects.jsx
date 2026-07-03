@@ -66,7 +66,7 @@ const ProjectItem = ({ project, index }) => {
   };
 
   return (
-    <div className="py-16 lg:py-20 grid lg:grid-cols-10 gap-8 lg:gap-12 items-start">
+    <div className="py-4 lg:py-0 grid lg:grid-cols-10 gap-8 lg:gap-12 items-start">
       {/* Project Media Viewport Slot — Centered, Constant height, no cropping */}
       <div className="lg:col-span-6">
         <div className="w-full bg-surface flex items-center justify-center overflow-hidden select-none h-[280px] sm:h-[380px] lg:h-[480px]">
@@ -139,7 +139,7 @@ const ProjectItem = ({ project, index }) => {
                   LIVE DEMO
                 </a>
               )}
-              
+
               {project.githubUrl && (
                 <a
                   href={project.githubUrl}
@@ -180,7 +180,7 @@ const ProjectItem = ({ project, index }) => {
                 CLOSE ×
               </button>
             </div>
-            
+
             {/* Modal Viewport */}
             <div className="relative pt-[56.25%] w-full bg-surface">
               <iframe
@@ -197,35 +197,16 @@ const ProjectItem = ({ project, index }) => {
 
       {/* Zoom Modal Overlay */}
       {showZoomModal && (
-        <div 
+        <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-ground/95 p-4 transition-colors duration-150 cursor-zoom-out"
           onClick={() => setShowZoomModal(false)}
         >
-          <div 
-            className="relative max-w-5xl max-h-[90vh] bg-ground border border-border-custom flex flex-col cursor-default"
+          <img
+            src={getMediaUrl(currentMedia?.asset)}
+            alt={currentMedia?.alt || project.title}
+            className="max-w-[95vw] max-h-[95vh] w-auto h-auto object-contain select-none cursor-default"
             onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex justify-between items-center px-4 py-3 border-b border-border-light font-sans text-[10px] tracking-widest uppercase font-bold text-ink">
-              <span>SCREENSHOT ZOOM — {project.title}</span>
-              <button
-                onClick={() => setShowZoomModal(false)}
-                className="hover:underline cursor-pointer"
-                aria-label="Close zoom modal"
-              >
-                CLOSE ×
-              </button>
-            </div>
-            
-            {/* Image Box */}
-            <div className="bg-surface flex items-center justify-center p-2 overflow-auto max-h-[80vh]">
-              <img
-                src={getMediaUrl(currentMedia?.asset)}
-                alt={currentMedia?.alt || project.title}
-                className="max-h-[75vh] w-auto object-contain"
-              />
-            </div>
-          </div>
+          />
         </div>
       )}
     </div>
@@ -238,12 +219,12 @@ const Projects = ({ projects }) => {
   return (
     <section id="projects" className="py-24 lg:py-32 px-2 md:px-4 relative overflow-hidden">
       {/* Watermark number */}
-      <div className="absolute -top-8 -left-2 font-display text-[10rem] lg:text-[16rem] font-bold text-ink opacity-[0.05] dark:opacity-[0.1] leading-none select-none pointer-events-none">
+      <div className="absolute lg:-top-8 lg:-left-2 top-2 left-2 font-display text-[10rem] lg:text-[16rem] font-bold text-ink opacity-[0.05] dark:opacity-[0.1] leading-none select-none pointer-events-none">
         02
       </div>
 
       {/* Section Header */}
-      <div className="mb-16 lg:mb-20">
+      <div className="mb-0 lg:mb-20">
         <div className="font-sans text-[10px] tracking-[0.3em] text-muted uppercase mb-2">
           02 — WORK
         </div>
