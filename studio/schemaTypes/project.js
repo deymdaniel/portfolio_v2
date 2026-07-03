@@ -14,32 +14,10 @@ export default {
       title: 'Description',
     },
     {
-      name: 'image',
-      type: 'image',
-      title: 'Project Screenshot (Cover)',
-      options: {
-        hotspot: true, // Enables UI for cropping and selecting focal point
-      },
-    },
-    {
-      name: 'landscapeImages',
+      name: 'images',
       type: 'array',
-      title: 'Landscape / Web Screenshots (Optional)',
-      description: 'Screenshots of the desktop/website layout',
-      of: [
-        {
-          type: 'image',
-          options: {
-            hotspot: true,
-          },
-        },
-      ],
-    },
-    {
-      name: 'portraitImages',
-      type: 'array',
-      title: 'Portrait / Mobile Screenshots (Optional)',
-      description: 'Screenshots or mockups of the mobile layout',
+      title: 'Project Screenshots',
+      description: 'Upload landscape screenshots for this project (recommended 1920x1080p)',
       of: [
         {
           type: 'image',

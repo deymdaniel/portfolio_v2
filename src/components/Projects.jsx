@@ -25,29 +25,39 @@ const getYouTubeEmbedUrl = (url) => {
 const ProjectItem = ({ project, index }) => {
   const hasVideo = !!project.videoUrl;
 
-  // Build a single combined media list for screenshots (landscape and portrait together)
+  // Build a single combined media list for screenshots from the unified images field
   const mediaList = [];
-  if (project.image) {
-    mediaList.push({
-      asset: project.image,
-      alt: `${project.title} Cover`,
-    });
-  }
-  if (project.landscapeImages && project.landscapeImages.length > 0) {
-    project.landscapeImages.forEach((img, idx) => {
+  if (project.images && project.images.length > 0) {
+    project.images.forEach((img, idx) => {
       mediaList.push({
         asset: img,
-        alt: `${project.title} Desktop Screenshot ${idx + 1}`,
+        alt: `${project.title} Screenshot ${idx + 1}`,
       });
     });
-  }
-  if (project.portraitImages && project.portraitImages.length > 0) {
-    project.portraitImages.forEach((img, idx) => {
+  } else {
+    // Backward compatibility fallbacks for existing database content
+    if (project.image) {
       mediaList.push({
-        asset: img,
-        alt: `${project.title} Mobile Mockup ${idx + 1}`,
+        asset: project.image,
+        alt: `${project.title} Cover`,
       });
-    });
+    }
+    if (project.landscapeImages && project.landscapeImages.length > 0) {
+      project.landscapeImages.forEach((img, idx) => {
+        mediaList.push({
+          asset: img,
+          alt: `${project.title} Desktop Screenshot ${idx + 1}`,
+        });
+      });
+    }
+    if (project.portraitImages && project.portraitImages.length > 0) {
+      project.portraitImages.forEach((img, idx) => {
+        mediaList.push({
+          asset: img,
+          alt: `${project.title} Mobile Mockup ${idx + 1}`,
+        });
+      });
+    }
   }
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -60,9 +70,18 @@ const ProjectItem = ({ project, index }) => {
     setActiveIndex((prev) => (prev + 1) % mediaList.length);
   };
 
-  const getMediaUrl = (asset) => {
+  const getMediaUrl = (asset, width) => {
     if (!asset) return "";
-    return typeof asset === "object" ? urlFor(asset).width(800).url() : asset;
+    if (typeof asset === "object") {
+      return width ? urlFor(asset).width(width).url() : urlFor(asset).url();
+    }
+    return asset;
+  };
+
+  const handleZoomClick = () => {
+    if (window.innerWidth >= 1024) {
+      setShowZoomModal(true);
+    }
   };
 
   return (
@@ -76,10 +95,10 @@ const ProjectItem = ({ project, index }) => {
             </div>
           ) : (
             <img
-              src={getMediaUrl(currentMedia?.asset)}
+              src={getMediaUrl(currentMedia?.asset, 800)}
               alt={currentMedia?.alt || project.title}
-              onClick={() => setShowZoomModal(true)}
-              className="h-full w-auto object-contain cursor-zoom-in"
+              onClick={handleZoomClick}
+              className="h-full w-auto object-contain cursor-default lg:cursor-zoom-in"
             />
           )}
         </div>
@@ -204,7 +223,7 @@ const ProjectItem = ({ project, index }) => {
           <img
             src={getMediaUrl(currentMedia?.asset)}
             alt={currentMedia?.alt || project.title}
-            className="max-w-[95vw] max-h-[95vh] w-auto h-auto object-contain select-none cursor-default"
+            className="max-w-[98vw] max-h-[98vh] w-auto h-auto object-contain select-none cursor-default"
             onClick={(e) => e.stopPropagation()}
           />
         </div>
