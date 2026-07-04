@@ -2,25 +2,6 @@ import React, { useState } from "react";
 import { config } from "../config";
 import { urlFor } from "../lib/sanity";
 
-// Helper to convert YouTube watch links to embeddable links
-const getYouTubeEmbedUrl = (url) => {
-  if (!url) return "";
-  let videoId = "";
-  try {
-    const parsedUrl = new URL(url);
-    if (parsedUrl.hostname === "youtu.be") {
-      videoId = parsedUrl.pathname.slice(1);
-    } else if (parsedUrl.hostname.includes("youtube.com")) {
-      videoId = parsedUrl.searchParams.get("v");
-      if (!videoId && parsedUrl.pathname.startsWith("/embed/")) {
-        videoId = parsedUrl.pathname.split("/")[2];
-      }
-    }
-  } catch (e) {
-    console.error("Invalid YouTube URL:", url, e);
-  }
-  return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
-};
 
 const ProjectItem = ({ project, index }) => {
   const hasVideo = !!project.videoUrl;
@@ -61,7 +42,6 @@ const ProjectItem = ({ project, index }) => {
   }
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [showVideoModal, setShowVideoModal] = useState(false);
   const [showZoomModal, setShowZoomModal] = useState(false);
   const currentMedia = mediaList[activeIndex];
 
@@ -170,49 +150,22 @@ const ProjectItem = ({ project, index }) => {
                 </a>
               )}
 
-              {/* Toggles video walkthrough display in a popup modal */}
+              {/* Opens video walkthrough directly in a new tab */}
               {hasVideo && (
-                <button
-                  onClick={() => setShowVideoModal(true)}
-                  className="underline underline-offset-4 hover:no-underline text-ink cursor-pointer"
+                <a
+                  href={project.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4 hover:no-underline text-ink"
                 >
                   VIDEO DEMO
-                </button>
+                </a>
               )}
             </>
           )}
         </div>
       </div>
 
-      {/* Video Modal Overlay */}
-      {showVideoModal && hasVideo && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ground/95 p-4 transition-colors duration-150">
-          <div className="relative w-full max-w-4xl bg-ground border border-border-custom flex flex-col">
-            {/* Modal Header */}
-            <div className="flex justify-between items-center px-4 py-3 border-b border-border-light font-sans text-[10px] tracking-widest uppercase font-bold text-ink">
-              <span>PROJECT DEMO — {project.title}</span>
-              <button
-                onClick={() => setShowVideoModal(false)}
-                className="hover:underline cursor-pointer"
-                aria-label="Close modal"
-              >
-                CLOSE ×
-              </button>
-            </div>
-
-            {/* Modal Viewport */}
-            <div className="relative pt-[56.25%] w-full bg-surface">
-              <iframe
-                src={getYouTubeEmbedUrl(project.videoUrl)}
-                className="absolute inset-0 w-full h-full border-0"
-                title={`${project.title} Walkthrough Video`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              ></iframe>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Zoom Modal Overlay */}
       {showZoomModal && (
