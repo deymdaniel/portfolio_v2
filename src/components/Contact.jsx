@@ -18,20 +18,57 @@ const Contact = ({ personalInfo }) => {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
+    const accessKey = personalInfo?.web3FormsKey || config.web3FormsKey;
+    const hasValidKey = accessKey && accessKey !== "YOUR_ACCESS_KEY_HERE";
+
+    if (!hasValidKey) {
+      // Fallback: Create mailto link with form data if no valid API key exists
+      try {
+        const subject = encodeURIComponent(`Portfolio Contact: ${data.subject}`);
+        const body = encodeURIComponent(
+          `Name: ${data.name}\nEmail: ${data.email}\n\nMessage:\n${data.message}`,
+        );
+        const mailtoUrl = `mailto:${emailAddress}?subject=${subject}&body=${body}`;
+
+        // Open email client
+        window.location.href = mailtoUrl;
+
+        setSubmitStatus("success");
+        reset();
+      } catch {
+        setSubmitStatus("error");
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    // Main action: Background AJAX submit to Web3Forms API
     try {
-      // Create mailto link with form data
-      const subject = encodeURIComponent(`Portfolio Contact: ${data.subject}`);
-      const body = encodeURIComponent(
-        `Name: ${data.name}\nEmail: ${data.email}\n\nMessage:\n${data.message}`,
-      );
-      const mailtoUrl = `mailto:${emailAddress}?subject=${subject}&body=${body}`;
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: data.name,
+          email: data.email,
+          subject: data.subject,
+          message: data.message,
+        }),
+      });
 
-      // Open email client
-      window.location.href = mailtoUrl;
-
-      setSubmitStatus("success");
-      reset();
-    } catch {
+      const result = await response.json();
+      if (result.success) {
+        setSubmitStatus("success");
+        reset();
+      } else {
+        setSubmitStatus("error");
+      }
+    } catch (error) {
+      console.error("Web3Forms submission error:", error);
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -144,7 +181,9 @@ const Contact = ({ personalInfo }) => {
 
           {submitStatus === "success" && (
             <p className="text-ink font-bold text-[10px] tracking-widest">
-              EMAIL CLIENT OPENED SUCCESSFULLY
+              {(personalInfo?.web3FormsKey || config.web3FormsKey) && (personalInfo?.web3FormsKey || config.web3FormsKey) !== "YOUR_ACCESS_KEY_HERE"
+                ? "MESSAGE SENT SUCCESSFULLY"
+                : "EMAIL CLIENT OPENED SUCCESSFULLY"}
             </p>
           )}
 

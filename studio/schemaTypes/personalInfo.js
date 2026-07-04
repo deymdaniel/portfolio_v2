@@ -21,5 +21,11 @@ export default {
         accept: '.pdf',
       },
     },
+    {
+      name: 'web3FormsKey',
+      type: 'string',
+      title: 'Web3Forms Access Key',
+      description: 'Get a free key from web3forms.com to enable background email submissions',
+    },
   ],
 }

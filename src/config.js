@@ -7,6 +7,7 @@ export const config = {
   title: "Full-Stack Web & App developer",
   email: "danielbiacaniii@gmail.com",
   location: "Manila, Philippines",
+  web3FormsKey: "YOUR_ACCESS_KEY_HERE", // Paste your key here from web3forms.com
 
   // About section
   about: {

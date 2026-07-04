@@ -2,7 +2,6 @@ import React from "react";
 import { config } from "../config";
 
 const About = ({ about }) => {
-  const description = config.about.description;
   const skills = about?.skills || config.about.skills;
 
   return (
@@ -26,30 +25,37 @@ const About = ({ about }) => {
       <div className="grid lg:grid-cols-10 gap-8 lg:gap-16 items-start">
         {/* Description */}
         <div className="lg:col-span-6 font-sans text-xs sm:text-sm tracking-wide leading-relaxed uppercase text-ink">
-          <p className="mb-6">{description}</p>
+          <p className="mb-6">I am a full-stack web and mobile developer based in Manila, currently pursuing a BS in Computer Science at{" "}
+            <a 
+              href="https://www.ciit.edu.ph/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 hover:no-underline font-bold"
+              >CIIT</a>. I specialize in creating software solutions that help businesses and everyday users solve complex problems through intuitive design.
+          </p>
           <p className="mb-6">
-            Before diving into web development, I explored graphic design as a
-            hobby, which now helps me blend creativity with code to build
-            visually appealing and user-friendly websites.
+            Before diving into code, I explored graphic design as a hobby. That creative lens still guides me today, helping me build visually appealing, user-centered apps. I stay productive by integrating modern AI agents and CI/CD pipelines into my workflow. From optimizing my family's business operations to engineering full-scale mobile marketplaces, I love building clean, maintainable systems that scale.
+
+
           </p>
           <p>
-            When I'm not coding, you'll probably find me gaming, watching{" "}
+            Development aside, I also love gaming, watching{" "}
             <a
               href="https://boxd.it/6fW5D"
               target="_blank"
               rel="noopener noreferrer"
               className="underline underline-offset-4 hover:no-underline font-bold"
             >
-              MOVIES
+              movies
             </a>
-            , or listening to{" "}
+            , and listening to{" "}
             <a
               href="https://open.spotify.com/user/deymdaniel?si=2acf08424f9c4e34"
               target="_blank"
               rel="noopener noreferrer"
               className="underline underline-offset-4 hover:no-underline font-bold"
             >
-              MUSIC
+              music
             </a>
             .
           </p>
