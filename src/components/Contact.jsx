@@ -213,22 +213,24 @@ const Contact = ({ personalInfo }) => {
         </form>
 
         {/* Direct contact */}
-        <div className="mt-20 pt-12">
+        <div className="mt-20 pt-12 relative">
           <p className="font-sans text-[10px] tracking-widest uppercase text-muted mb-4">
             OR REACH OUT DIRECTLY
           </p>
-          <button
-            type="button"
-            onClick={handleCopyEmail}
-            className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink hover:underline uppercase cursor-pointer block text-left bg-transparent border-0 p-0"
-          >
-            {emailAddress}
-          </button>
-          {copied && (
-            <p className="font-sans text-[9px] tracking-widest text-ink mt-2 uppercase font-bold animate-pulse">
-              COPIED TO CLIPBOARD
-            </p>
-          )}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={handleCopyEmail}
+              className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink hover:underline uppercase cursor-pointer block text-left bg-transparent border-0 p-0"
+            >
+              {emailAddress}
+            </button>
+            {copied && (
+              <p className="absolute left-0 top-full mt-2 font-sans text-[9px] tracking-widest text-ink uppercase font-bold animate-pulse whitespace-nowrap">
+                COPIED TO CLIPBOARD
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </section>
