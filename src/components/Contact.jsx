@@ -6,6 +6,15 @@ const Contact = ({ personalInfo }) => {
   const emailAddress = personalInfo?.email || config.email;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(emailAddress);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
 
   const {
     register,
@@ -208,12 +217,13 @@ const Contact = ({ personalInfo }) => {
           <p className="font-sans text-[10px] tracking-widest uppercase text-muted mb-4">
             OR REACH OUT DIRECTLY
           </p>
-          <a
-            href={`mailto:${emailAddress}`}
-            className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink hover:underline uppercase"
+          <button
+            type="button"
+            onClick={handleCopyEmail}
+            className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink hover:underline uppercase cursor-pointer block text-left bg-transparent border-0 p-0"
           >
-            {emailAddress}
-          </a>
+            {copied ? "COPIED TO CLIPBOARD" : emailAddress}
+          </button>
         </div>
       </div>
     </section>
