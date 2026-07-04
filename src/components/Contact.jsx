@@ -222,8 +222,13 @@ const Contact = ({ personalInfo }) => {
             onClick={handleCopyEmail}
             className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink hover:underline uppercase cursor-pointer block text-left bg-transparent border-0 p-0"
           >
-            {copied ? "COPIED TO CLIPBOARD" : emailAddress}
+            {emailAddress}
           </button>
+          {copied && (
+            <p className="font-sans text-[9px] tracking-widest text-ink mt-2 uppercase font-bold animate-pulse">
+              COPIED TO CLIPBOARD
+            </p>
+          )}
         </div>
       </div>
     </section>
