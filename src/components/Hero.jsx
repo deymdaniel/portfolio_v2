@@ -33,7 +33,7 @@ const Hero = () => {
         </h2>
 
         <p className="font-sans text-[11px] tracking-wide leading-relaxed uppercase text-muted max-w-md mt-8">
-          Full-stack web and mobile developer with experience building responsive web platforms and cross-platform mobile apps using React, Flutter, Supabase, and Firebase. I use modern developer tools like AI agents and Model Context Protocol (MCP) servers as force multipliers to speed up coding, debugging, and testing, allowing me to build and ship high-quality software quickly.
+          Full-stack software developer with experience in building responsive web platforms and cross-platform mobile apps. I use modern developer tools like AI agents and Model Context Protocol (MCP) servers as a way to speed up coding, debugging, and testing, allowing me to build and ship high-quality software quickly.
         </p>
 
         {/* CTA */}

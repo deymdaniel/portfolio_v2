@@ -28,3 +28,7 @@ CUSTOMIZATION.md
 # Graphify output
 graphify-out/
 
+# Agent/IDE files
+.agents/
+skills-lock.json
+
