@@ -62,7 +62,7 @@ function App() {
         console.error("Error fetching data from Sanity:", error);
         setData((prev) => ({ ...prev, loading: false }));
         setDebugInfo({
-          error: error.message || String(error),
+          error: `${error.message || String(error)} (Origin: ${window.location.origin})`,
           status: "error",
           projectsLength: 0,
         });
