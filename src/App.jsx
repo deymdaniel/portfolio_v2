@@ -17,6 +17,12 @@ function App() {
     loading: true,
   });
 
+  const [debugInfo, setDebugInfo] = useState({
+    error: null,
+    status: "idle",
+    projectsLength: 0,
+  });
+
   const [isDarkMode, setIsDarkMode] = useState(() => {
     try {
       const saved = localStorage.getItem("theme");
@@ -46,9 +52,20 @@ function App() {
           projects: projects || [],
           loading: false,
         });
+
+        setDebugInfo({
+          error: null,
+          status: "success",
+          projectsLength: projects ? projects.length : 0,
+        });
       } catch (error) {
         console.error("Error fetching data from Sanity:", error);
         setData((prev) => ({ ...prev, loading: false }));
+        setDebugInfo({
+          error: error.message || String(error),
+          status: "error",
+          projectsLength: 0,
+        });
       }
     };
 
@@ -85,7 +102,17 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-ground text-ink selection:bg-ink selection:text-ground transition-colors duration-150 lg:grid lg:grid-cols-12">
+    <div className="min-h-screen bg-ground text-ink selection:bg-ink selection:text-ground transition-colors duration-150 lg:grid lg:grid-cols-12 relative">
+      {debugInfo.status === "error" && (
+        <div className="fixed top-0 left-0 right-0 z-[9999] bg-red-600 text-white text-[10px] p-3 text-center uppercase tracking-widest font-bold">
+          API Error: {debugInfo.error}
+        </div>
+      )}
+      {debugInfo.status === "success" && debugInfo.projectsLength === 0 && (
+        <div className="fixed top-0 left-0 right-0 z-[9999] bg-yellow-600 text-black text-[10px] p-3 text-center uppercase tracking-widest font-bold">
+          API Success but 0 projects returned from Sanity.
+        </div>
+      )}
       <Header
         personalInfo={data.personalInfo}
         social={data.social}
