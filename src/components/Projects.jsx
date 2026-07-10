@@ -186,7 +186,7 @@ const ProjectItem = ({ project, index }) => {
 };
 
 const Projects = ({ projects }) => {
-  const displayProjects = projects && projects.length > 0 ? projects : config.projects;
+  const displayProjects = projects || [];
 
   return (
     <section id="projects" className="py-24 lg:py-32 px-2 md:px-4 relative overflow-hidden">

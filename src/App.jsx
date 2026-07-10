@@ -18,9 +18,13 @@ function App() {
   });
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved) {
-      return saved === "dark";
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved) {
+        return saved === "dark";
+      }
+    } catch (e) {
+      console.warn("localStorage is not available:", e);
     }
     return false; // Default to light mode
   });
@@ -55,10 +59,18 @@ function App() {
     const root = window.document.documentElement;
     if (isDarkMode) {
       root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+      try {
+        localStorage.setItem("theme", "dark");
+      } catch (e) {
+        console.warn("Unable to save theme preference:", e);
+      }
     } else {
       root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+      try {
+        localStorage.setItem("theme", "light");
+      } catch (e) {
+        console.warn("Unable to save theme preference:", e);
+      }
     }
   }, [isDarkMode]);
 
